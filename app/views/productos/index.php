@@ -29,6 +29,7 @@
                 <th>Stock</th>
                 <th>Mínimo</th>
                 <th>Tipo</th>
+                <th>Descripción</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -38,10 +39,11 @@
                     <td><?= $p->getId() ?></td>
                     <td><?= htmlspecialchars($p->getNombre()) ?></td>
                     <td><?= htmlspecialchars($p->getSku()) ?></td>
-                    <td><?= number_format($p->getPrecioVenta(), 2) ?></td>
+                    <td>$<?= number_format($p->getPrecioVenta(), 2) ?></td>
                     <td><?= $p->getStockActual() ?></td>
                     <td><?= $p->getStockMinimo() ?></td>
-                    <td><?= $p->getTipo() ?></td>
+                    <td><?= ucfirst(htmlspecialchars($p->getTipo())) ?></td>
+                    <td><?= htmlspecialchars($p->descripcion()) ?></td>
                     <td>
                         <a href="index.php?accion=editar&id=<?= $p->getId() ?>" class="btn editar">Editar</a>
                         <a href="index.php?accion=eliminar&id=<?= $p->getId() ?>" class="btn eliminar"

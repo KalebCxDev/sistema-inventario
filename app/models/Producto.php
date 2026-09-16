@@ -83,6 +83,11 @@ class Producto extends Model
         return $this->stockActual <= $this->stockMinimo;
     }
 
+    public function descripcion()
+    {
+        return "Producto: {$this->nombre}";
+    }
+
     public function guardar()
     {
         $sql = "INSERT INTO productos (nombre, sku, precio_venta, stock_actual, stock_minimo, categoria_id, tipo)
@@ -149,7 +154,16 @@ class Producto extends Model
 
     private function mapear($fila)
     {
-        $p = new Producto();
+        $tipo = $fila['tipo'];
+
+        if ($tipo === 'fragil') {
+            $p = new ProductoFragil();
+        } elseif ($tipo === 'perecedero') {
+            $p = new ProductoPerecedero();
+        } else {
+            $p = new ProductoEstandar();
+        }
+
         $p->setId($fila['id']);
         $p->setNombre($fila['nombre']);
         $p->setSku($fila['sku']);
