@@ -66,7 +66,11 @@ class Producto extends Model
 
     public function setCategoriaId($id)
     {
-        $this->categoriaId = $id === null ? null : (int)$id;
+        if ($id === null || $id === '') {
+            $this->categoriaId = null;
+        } else {
+            $this->categoriaId = (int)$id;
+        }
     }
 
     public function setTipo($tipo)

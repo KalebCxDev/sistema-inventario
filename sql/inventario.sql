@@ -12,3 +12,8 @@ CREATE TABLE productos (
     tipo VARCHAR(30) NOT NULL DEFAULT 'estandar',
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE categorias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE
+);

@@ -45,6 +45,17 @@
             <option value="perecedero" <?= $producto->getTipo() === 'perecedero' ? 'selected' : '' ?>>Perecedero</option>
         </select>
 
+        <label>Categoría:</label>
+        <select name="categoria_id">
+            <option value="">Sin categoría</option>
+            <?php foreach ($categorias as $c): ?>
+                <option value="<?= $c->getId() ?>"
+                    <?= $producto->getCategoriaId() == $c->getId() ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($c->getNombre()) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        
         <button type="submit">Actualizar</button>
     </form>
 </body>

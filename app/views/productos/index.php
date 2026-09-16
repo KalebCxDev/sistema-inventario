@@ -22,6 +22,7 @@
     <table>
         <thead>
             <tr>
+                <th>Categoría</th>
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>SKU</th>
@@ -36,6 +37,17 @@
         <tbody>
             <?php foreach ($productos as $p): ?>
                 <tr class="<?= $p->stockCritico() ? 'critico' : '' ?>">
+                    <td>
+                        <?php
+                            if ($p->getCategoriaId()) {
+                                $cat = new Categoria();
+                                $c = $cat->buscarPorId($p->getCategoriaId());
+                                echo $c ? htmlspecialchars($c->getNombre()) : '-';
+                            } else {
+                                echo '-';
+                            }
+                        ?>
+                    </td>
                     <td><?= $p->getId() ?></td>
                     <td><?= htmlspecialchars($p->getNombre()) ?></td>
                     <td><?= htmlspecialchars($p->getSku()) ?></td>

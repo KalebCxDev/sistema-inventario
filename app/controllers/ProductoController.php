@@ -11,6 +11,8 @@ class ProductoController
 
     public function crear()
     {
+        $categoriaModel = new Categoria();
+        $categorias = $categoriaModel->listarTodos();
         require __DIR__ . '/../views/productos/crear.php';
     }
 
@@ -24,6 +26,7 @@ class ProductoController
             $p->setStockActual($_POST['stock_actual'] ?? 0);
             $p->setStockMinimo($_POST['stock_minimo'] ?? 0);
             $p->setTipo($_POST['tipo'] ?? 'estandar');
+            $p->setCategoriaId($_POST['categoria_id'] ?? null);
             $p->guardar();
 
             header('Location: index.php?accion=index');
@@ -45,9 +48,11 @@ class ProductoController
             exit;
         }
 
+        $categoriaModel = new Categoria();
+        $categorias = $categoriaModel->listarTodos();
+
         require __DIR__ . '/../views/productos/editar.php';
     }
-
     public function actualizar()
     {
         try {
@@ -59,6 +64,7 @@ class ProductoController
             $p->setStockActual($_POST['stock_actual'] ?? 0);
             $p->setStockMinimo($_POST['stock_minimo'] ?? 0);
             $p->setTipo($_POST['tipo'] ?? 'estandar');
+            $p->setCategoriaId($_POST['categoria_id'] ?? null);
             $p->actualizar();
 
             header('Location: index.php?accion=index');

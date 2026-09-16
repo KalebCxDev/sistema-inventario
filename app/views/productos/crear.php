@@ -43,6 +43,14 @@
             <option value="perecedero">Perecedero</option>
         </select>
 
+        <label>Categoría:</label>
+        <select name="categoria_id">
+            <option value="">Sin categoría</option>
+            <?php foreach ($categorias as $c): ?>
+                <option value="<?= $c->getId() ?>"><?= htmlspecialchars($c->getNombre()) ?></option>
+            <?php endforeach; ?>
+        </select>
+
         <button type="submit">Guardar</button>
     </form>
 </body>
