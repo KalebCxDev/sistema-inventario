@@ -41,6 +41,11 @@ switch ($accion) {
         $controller->guardar();
         break;
     
+    case 'alertas':
+        $controller = new AlertaController();
+        $controller->index();
+        break;
+
     default:
         $controller = new ProductoController();
         $controller->index();

@@ -6,9 +6,11 @@ class ProductoController
     {
         $producto = new Producto();
         $productos = $producto->listarTodos();
+        $criticos = $producto->listarCriticos();
+        $enAlerta = count($criticos);
+
         require __DIR__ . '/../views/productos/index.php';
     }
-
     public function crear()
     {
         $categoriaModel = new Categoria();

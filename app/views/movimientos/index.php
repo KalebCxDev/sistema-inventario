@@ -20,6 +20,7 @@
 <body>
     <h1>Movimientos</h1>
     <a href="index.php?accion=index">← Productos</a>
+    <a href="index.php?accion=alertas">Alertas</a>
 
     <?php if (!empty($error)): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>

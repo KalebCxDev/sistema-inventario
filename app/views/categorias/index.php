@@ -14,6 +14,12 @@
     </style>
 </head>
 <body>
+    <?php if ($enAlerta > 0): ?>
+        <div style="background:#fff3cd;border:1px solid #ffc107;padding:10px;border-radius:4px;margin-bottom:10px;">
+            ⚠ Hay <strong><?= $enAlerta ?></strong> producto(s) con stock crítico.
+            <a href="index.php?accion=alertas">Ver alertas</a>
+        </div>
+    <?php endif; ?>
     <h1>Categorías</h1>
     <a href="index.php?accion=index">← Productos</a> |
     <a href="index.php?accion=categoria_crear" class="btn nuevo">+ Nueva Categoría</a>

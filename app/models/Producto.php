@@ -183,4 +183,18 @@ class Producto extends Model
         $p->setTipo($fila['tipo']);
         return $p;
     }
+
+        public function listarCriticos()
+    {
+        $todos = $this->listarTodos();
+        $criticos = [];
+
+        foreach ($todos as $p) {
+            if ($p->stockCritico()) {
+                $criticos[] = $p;
+            }
+        }
+
+        return $criticos;
+    }
 }
