@@ -17,6 +17,7 @@
 </head>
 <body>
     <h1>Listado de Productos</h1>
+    <a href="index.php?accion=categorias">Gestionar Categorías</a>
     <a href="index.php?accion=crear" class="btn nuevo">+ Nuevo Producto</a>
 
     <table>
@@ -31,6 +32,7 @@
                 <th>Mínimo</th>
                 <th>Tipo</th>
                 <th>Descripción</th>
+                <th>Detalles</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -56,6 +58,7 @@
                     <td><?= $p->getStockMinimo() ?></td>
                     <td><?= ucfirst(htmlspecialchars($p->getTipo())) ?></td>
                     <td><?= htmlspecialchars($p->descripcion()) ?></td>
+                    <td><?= htmlspecialchars($p->detallesExtra()) ?></td>
                     <td>
                         <a href="index.php?accion=editar&id=<?= $p->getId() ?>" class="btn editar">Editar</a>
                         <a href="index.php?accion=eliminar&id=<?= $p->getId() ?>" class="btn eliminar"

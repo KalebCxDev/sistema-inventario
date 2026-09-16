@@ -16,4 +16,9 @@ class ProductoPerecedero extends Producto
     {
         return $this->getStockActual() <= ($this->getStockMinimo() * 2);
     }
+
+        public function detallesExtra()
+    {
+        return 'Vida útil: ' . $this->getDiasVidaUtil() . ' días';
+    }
 }

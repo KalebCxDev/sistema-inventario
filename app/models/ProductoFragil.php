@@ -11,4 +11,9 @@ class ProductoFragil extends Producto
     {
         return round($this->getPrecioVenta() * 0.05, 2);
     }
+
+        public function detallesExtra()
+    {
+        return 'Recargo por manejo: S/ ' . number_format($this->recargoManejo(), 2);
+    }
 }

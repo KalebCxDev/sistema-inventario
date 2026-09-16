@@ -92,6 +92,11 @@ class Producto extends Model
         return "Producto: {$this->nombre}";
     }
 
+        public function detallesExtra()
+    {
+        return '-';
+    }
+
     public function guardar()
     {
         $sql = "INSERT INTO productos (nombre, sku, precio_venta, stock_actual, stock_minimo, categoria_id, tipo)
