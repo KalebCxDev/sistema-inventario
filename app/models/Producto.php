@@ -82,4 +82,82 @@ class Producto extends Model
     {
         return $this->stockActual <= $this->stockMinimo;
     }
+
+    public function guardar()
+    {
+        $sql = "INSERT INTO productos (nombre, sku, precio_venta, stock_actual, stock_minimo, categoria_id, tipo)
+                VALUES (:nombre, :sku, :precio, :stock, :minimo, :categoria, :tipo)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':nombre' => $this->nombre,
+            ':sku' => $this->sku,
+            ':precio' => $this->precioVenta,
+            ':stock' => $this->stockActual,
+            ':minimo' => $this->stockMinimo,
+            ':categoria' => $this->categoriaId,
+            ':tipo' => $this->tipo
+        ]);
+        $this->id = $this->db->lastInsertId();
+        return $this->id;
+    }
+
+    public function actualizar()
+    {
+        $sql = "UPDATE productos SET nombre = :nombre, sku = :sku, precio_venta = :precio,
+                stock_actual = :stock, stock_minimo = :minimo, categoria_id = :categoria, tipo = :tipo
+                WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':nombre' => $this->nombre,
+            ':sku' => $this->sku,
+            ':precio' => $this->precioVenta,
+            ':stock' => $this->stockActual,
+            ':minimo' => $this->stockMinimo,
+            ':categoria' => $this->categoriaId,
+            ':tipo' => $this->tipo,
+            ':id' => $this->id
+        ]);
+    }
+
+    public function eliminar()
+    {
+        $stmt = $this->db->prepare("DELETE FROM productos WHERE id = :id");
+        return $stmt->execute([':id' => $this->id]);
+    }
+
+    public function buscarPorId($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM productos WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$fila) {
+            return null;
+        }
+        return $this->mapear($fila);
+    }
+
+    public function listarTodos()
+    {
+        $stmt = $this->db->query("SELECT * FROM productos ORDER BY id DESC");
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $productos = [];
+        foreach ($filas as $fila) {
+            $productos[] = $this->mapear($fila);
+        }
+        return $productos;
+    }
+
+    private function mapear($fila)
+    {
+        $p = new Producto();
+        $p->setId($fila['id']);
+        $p->setNombre($fila['nombre']);
+        $p->setSku($fila['sku']);
+        $p->setPrecioVenta($fila['precio_venta']);
+        $p->setStockActual($fila['stock_actual']);
+        $p->setStockMinimo($fila['stock_minimo']);
+        $p->setCategoriaId($fila['categoria_id']);
+        $p->setTipo($fila['tipo']);
+        return $p;
+    }
 }
