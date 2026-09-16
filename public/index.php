@@ -31,6 +31,16 @@ switch ($accion) {
         $controller->eliminar();
         break;
 
+    case 'movimientos':
+        $controller = new MovimientoController();
+        $controller->index();
+        break;
+
+    case 'movimiento_guardar':
+        $controller = new MovimientoController();
+        $controller->guardar();
+        break;
+    
     default:
         $controller = new ProductoController();
         $controller->index();

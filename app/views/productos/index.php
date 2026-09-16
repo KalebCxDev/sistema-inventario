@@ -18,6 +18,7 @@
 <body>
     <h1>Listado de Productos</h1>
     <a href="index.php?accion=categorias">Gestionar Categorías</a>
+    <a href="index.php?accion=movimientos">Ver Movimientos</a>
     <a href="index.php?accion=crear" class="btn nuevo">+ Nuevo Producto</a>
 
     <table>
