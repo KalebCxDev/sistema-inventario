@@ -6,11 +6,8 @@ class AlertaController
     {
         $p = new Producto();
         $criticos = $p->listarCriticos();
-
-        $todos = $p->listarTodos();
-        $total = count($todos);
+        $total = count($p->listarTodos());
         $enAlerta = count($criticos);
-
         require __DIR__ . '/../views/alertas/index.php';
     }
 }

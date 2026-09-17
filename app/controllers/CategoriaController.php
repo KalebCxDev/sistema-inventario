@@ -4,14 +4,14 @@ class CategoriaController
 {
     public function index()
     {
-        $categoria = new Categoria();
-        $categorias = $categoria->listarTodos();
+        $categorias = (new Categoria())->listarTodos();
         require __DIR__ . '/../views/categorias/index.php';
     }
 
     public function crear()
     {
-        require __DIR__ . '/../views/categorias/crear.php';
+        $categorias = (new Categoria())->listarTodos();
+        require __DIR__ . '/../views/categorias/index.php';
     }
 
     public function guardar()
@@ -20,25 +20,23 @@ class CategoriaController
             $c = new Categoria();
             $c->setNombre($_POST['nombre'] ?? '');
             $c->guardar();
-
-            header('Location: index.php?accion=categorias');
-            exit;
+            $this->redirect();
         } catch (Exception $e) {
+            $categorias = (new Categoria())->listarTodos();
             $error = $e->getMessage();
-            require __DIR__ . '/../views/categorias/crear.php';
+            require __DIR__ . '/../views/categorias/index.php';
         }
     }
 
     public function eliminar()
     {
-        $id = $_GET['id'] ?? 0;
-        $c = new Categoria();
-        $categoria = $c->buscarPorId($id);
+        $c = (new Categoria())->buscarPorId($_GET['id'] ?? 0);
+        if ($c) $c->eliminar();
+        $this->redirect();
+    }
 
-        if ($categoria) {
-            $categoria->eliminar();
-        }
-
+    private function redirect()
+    {
         header('Location: index.php?accion=categorias');
         exit;
     }

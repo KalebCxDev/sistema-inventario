@@ -4,92 +4,77 @@ class ProductoController
 {
     public function index()
     {
-        $producto = new Producto();
-        $productos = $producto->listarTodos();
-        $criticos = $producto->listarCriticos();
-        $enAlerta = count($criticos);
-
-        require __DIR__ . '/../views/productos/index.php';
+        $p = new Producto();
+        $this->render('productos/index', [
+            'productos' => $p->listarTodos(),
+            'enAlerta' => count($p->listarCriticos()),
+        ]);
     }
+
     public function crear()
     {
-        $categoriaModel = new Categoria();
-        $categorias = $categoriaModel->listarTodos();
-        require __DIR__ . '/../views/productos/crear.php';
-    }
-
-    public function guardar()
-    {
-        try {
-            $p = new Producto();
-            $p->setNombre($_POST['nombre'] ?? '');
-            $p->setSku($_POST['sku'] ?? '');
-            $p->setPrecioVenta($_POST['precio_venta'] ?? 0);
-            $p->setStockActual($_POST['stock_actual'] ?? 0);
-            $p->setStockMinimo($_POST['stock_minimo'] ?? 0);
-            $p->setTipo($_POST['tipo'] ?? 'estandar');
-            $p->setCategoriaId($_POST['categoria_id'] ?? null);
-            $p->guardar();
-
-            header('Location: index.php?accion=index');
-            exit;
-        } catch (Exception $e) {
-            $error = $e->getMessage();
-            require __DIR__ . '/../views/productos/crear.php';
-        }
+        $this->render('productos/formulario', [
+            'producto' => null,
+            'categorias' => (new Categoria())->listarTodos(),
+        ]);
     }
 
     public function editar()
     {
-        $id = $_GET['id'] ?? 0;
-        $p = new Producto();
-        $producto = $p->buscarPorId($id);
+        $producto = (new Producto())->buscarPorId($_GET['id'] ?? 0);
+        if (!$producto) return $this->redirect('index');
 
-        if (!$producto) {
-            header('Location: index.php?accion=index');
-            exit;
-        }
-
-        $categoriaModel = new Categoria();
-        $categorias = $categoriaModel->listarTodos();
-
-        require __DIR__ . '/../views/productos/editar.php';
+        $this->render('productos/formulario', [
+            'producto' => $producto,
+            'categorias' => (new Categoria())->listarTodos(),
+        ]);
     }
+
+    public function guardar()
+    {
+        $this->procesar(fn($p) => $p->guardar());
+    }
+
     public function actualizar()
     {
-        try {
-            $p = new Producto();
+        $this->procesar(function ($p) {
             $p->setId($_POST['id'] ?? 0);
-            $p->setNombre($_POST['nombre'] ?? '');
-            $p->setSku($_POST['sku'] ?? '');
-            $p->setPrecioVenta($_POST['precio_venta'] ?? 0);
-            $p->setStockActual($_POST['stock_actual'] ?? 0);
-            $p->setStockMinimo($_POST['stock_minimo'] ?? 0);
-            $p->setTipo($_POST['tipo'] ?? 'estandar');
-            $p->setCategoriaId($_POST['categoria_id'] ?? null);
             $p->actualizar();
-
-            header('Location: index.php?accion=index');
-            exit;
-        } catch (Exception $e) {
-            $error = $e->getMessage();
-            $p = new Producto();
-            $producto = $p->buscarPorId($_POST['id'] ?? 0);
-            require __DIR__ . '/../views/productos/editar.php';
-        }
+        });
     }
 
     public function eliminar()
     {
-        $id = $_GET['id'] ?? 0;
-        $p = new Producto();
-        $producto = $p->buscarPorId($id);
+        $producto = (new Producto())->buscarPorId($_GET['id'] ?? 0);
+        if ($producto) $producto->eliminar();
+        $this->redirect('index');
+    }
 
-        if ($producto) {
-            $producto->eliminar();
+    private function procesar($accion)
+    {
+        try {
+            $p = new Producto();
+            $p->llenar($_POST);
+            $accion($p);
+            $this->redirect('index');
+        } catch (Exception $e) {
+            $this->render('productos/formulario', [
+                'producto' => null,
+                'categorias' => (new Categoria())->listarTodos(),
+                'error' => $e->getMessage(),
+            ]);
         }
+    }
 
-        header('Location: index.php?accion=index');
+    private function render($vista, $datos = [])
+    {
+        extract($datos);
+        require __DIR__ . '/../views/' . $vista . '.php';
+    }
+
+    private function redirect($accion)
+    {
+        header("Location: index.php?accion=$accion");
         exit;
     }
 }

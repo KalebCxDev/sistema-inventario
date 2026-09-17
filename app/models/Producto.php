@@ -2,14 +2,7 @@
 
 class Producto extends Model
 {
-    private $id;
-    private $nombre;
-    private $sku;
-    private $precioVenta;
-    private $stockActual;
-    private $stockMinimo;
-    private $categoriaId;
-    private $tipo;
+    private $id, $nombre, $sku, $precioVenta, $stockActual, $stockMinimo, $categoriaId, $tipo;
 
     public function getId() { return $this->id; }
     public function getNombre() { return $this->nombre; }
@@ -20,96 +13,72 @@ class Producto extends Model
     public function getCategoriaId() { return $this->categoriaId; }
     public function getTipo() { return $this->tipo; }
 
-    public function setId($id) { $this->id = (int)$id; }
-
-    public function setNombre($nombre)
+    public function setNombre($v)
     {
-        $nombre = trim($nombre);
-        if ($nombre === '') {
-            throw new Exception('El nombre no puede estar vacío');
-        }
-        $this->nombre = $nombre;
+        if (trim($v) === '') throw new Exception('El nombre no puede estar vacío');
+        $this->nombre = trim($v);
     }
 
-    public function setSku($sku)
+    public function setSku($v)
     {
-        $sku = trim($sku);
-        if ($sku === '') {
-            throw new Exception('El SKU no puede estar vacío');
-        }
-        $this->sku = strtoupper($sku);
+        if (trim($v) === '') throw new Exception('El SKU no puede estar vacío');
+        $this->sku = strtoupper(trim($v));
     }
 
-    public function setPrecioVenta($precio)
+    public function setPrecioVenta($v)
     {
-        if ($precio < 0) {
-            throw new Exception('El precio no puede ser negativo');
-        }
-        $this->precioVenta = (float)$precio;
+        if ($v < 0) throw new Exception('El precio no puede ser negativo');
+        $this->precioVenta = (float)$v;
     }
 
-    public function setStockActual($stock)
+    public function setStockActual($v)
     {
-        if ($stock < 0) {
-            throw new Exception('El stock no puede ser negativo');
-        }
-        $this->stockActual = (int)$stock;
+        if ($v < 0) throw new Exception('El stock no puede ser negativo');
+        $this->stockActual = (int)$v;
     }
 
-    public function setStockMinimo($stock)
+    public function setStockMinimo($v)
     {
-        if ($stock < 0) {
-            throw new Exception('El stock mínimo no puede ser negativo');
-        }
-        $this->stockMinimo = (int)$stock;
+        if ($v < 0) throw new Exception('El stock mínimo no puede ser negativo');
+        $this->stockMinimo = (int)$v;
     }
 
-    public function setCategoriaId($id)
+    public function setCategoriaId($v)
     {
-        if ($id === null || $id === '') {
-            $this->categoriaId = null;
-        } else {
-            $this->categoriaId = (int)$id;
-        }
+        $this->categoriaId = ($v === '' || $v === null) ? null : (int)$v;
     }
 
-    public function setTipo($tipo)
+    public function setTipo($v)
     {
-        $tipos = ['estandar', 'fragil', 'perecedero'];
-        if (!in_array($tipo, $tipos)) {
-            throw new Exception('Tipo de producto inválido');
-        }
-        $this->tipo = $tipo;
+        if (!in_array($v, ['estandar', 'fragil', 'perecedero'])) throw new Exception('Tipo inválido');
+        $this->tipo = $v;
     }
 
-    public function stockCritico()
+    public function setId($v) { $this->id = (int)$v; }
+
+    public function llenar($datos)
     {
-        return $this->stockActual <= $this->stockMinimo;
+        $this->setNombre($datos['nombre'] ?? '');
+        $this->setSku($datos['sku'] ?? '');
+        $this->setPrecioVenta($datos['precio_venta'] ?? 0);
+        $this->setStockActual($datos['stock_actual'] ?? 0);
+        $this->setStockMinimo($datos['stock_minimo'] ?? 0);
+        $this->setCategoriaId($datos['categoria_id'] ?? null);
+        $this->setTipo($datos['tipo'] ?? 'estandar');
     }
 
-    public function descripcion()
-    {
-        return "Producto: {$this->nombre}";
-    }
-
-        public function detallesExtra()
-    {
-        return '-';
-    }
+    public function stockCritico() { return $this->stockActual <= $this->stockMinimo; }
+    public function descripcion() { return "Producto: {$this->nombre}"; }
+    public function detallesExtra() { return '-'; }
 
     public function guardar()
     {
-        $sql = "INSERT INTO productos (nombre, sku, precio_venta, stock_actual, stock_minimo, categoria_id, tipo)
-                VALUES (:nombre, :sku, :precio, :stock, :minimo, :categoria, :tipo)";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare("INSERT INTO productos (nombre, sku, precio_venta, stock_actual, stock_minimo, categoria_id, tipo)
+                                    VALUES (:n, :s, :p, :sa, :sm, :c, :t)");
         $stmt->execute([
-            ':nombre' => $this->nombre,
-            ':sku' => $this->sku,
-            ':precio' => $this->precioVenta,
-            ':stock' => $this->stockActual,
-            ':minimo' => $this->stockMinimo,
-            ':categoria' => $this->categoriaId,
-            ':tipo' => $this->tipo
+            ':n' => $this->nombre, ':s' => $this->sku, ':p' => $this->precioVenta,
+            ':sa' => $this->stockActual, ':sm' => $this->stockMinimo,
+            ':c' => $this->categoriaId, ':t' => $this->tipo
         ]);
         $this->id = $this->db->lastInsertId();
         return $this->id;
@@ -117,62 +86,48 @@ class Producto extends Model
 
     public function actualizar()
     {
-        $sql = "UPDATE productos SET nombre = :nombre, sku = :sku, precio_venta = :precio,
-                stock_actual = :stock, stock_minimo = :minimo, categoria_id = :categoria, tipo = :tipo
-                WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare("UPDATE productos SET nombre=:n, sku=:s, precio_venta=:p,
+                                    stock_actual=:sa, stock_minimo=:sm, categoria_id=:c, tipo=:t WHERE id=:id");
         return $stmt->execute([
-            ':nombre' => $this->nombre,
-            ':sku' => $this->sku,
-            ':precio' => $this->precioVenta,
-            ':stock' => $this->stockActual,
-            ':minimo' => $this->stockMinimo,
-            ':categoria' => $this->categoriaId,
-            ':tipo' => $this->tipo,
-            ':id' => $this->id
+            ':n' => $this->nombre, ':s' => $this->sku, ':p' => $this->precioVenta,
+            ':sa' => $this->stockActual, ':sm' => $this->stockMinimo,
+            ':c' => $this->categoriaId, ':t' => $this->tipo, ':id' => $this->id
         ]);
     }
 
     public function eliminar()
     {
-        $stmt = $this->db->prepare("DELETE FROM productos WHERE id = :id");
-        return $stmt->execute([':id' => $this->id]);
+        return $this->db->prepare("DELETE FROM productos WHERE id=:id")->execute([':id' => $this->id]);
     }
 
     public function buscarPorId($id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM productos WHERE id = :id");
+        $stmt = $this->db->prepare("SELECT * FROM productos WHERE id=:id");
         $stmt->execute([':id' => $id]);
         $fila = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$fila) {
-            return null;
-        }
-        return $this->mapear($fila);
+        return $fila ? $this->mapear($fila) : null;
     }
 
     public function listarTodos()
     {
         $stmt = $this->db->query("SELECT * FROM productos ORDER BY id DESC");
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $productos = [];
-        foreach ($filas as $fila) {
-            $productos[] = $this->mapear($fila);
-        }
-        return $productos;
+        return array_map([$this, 'mapear'], $stmt->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    public function listarCriticos()
+    {
+        return array_values(array_filter($this->listarTodos(), fn($p) => $p->stockCritico()));
     }
 
     private function mapear($fila)
     {
-        $tipo = $fila['tipo'];
+        $clase = match ($fila['tipo']) {
+            'fragil' => 'ProductoFragil',
+            'perecedero' => 'ProductoPerecedero',
+            default => 'ProductoEstandar',
+        };
 
-        if ($tipo === 'fragil') {
-            $p = new ProductoFragil();
-        } elseif ($tipo === 'perecedero') {
-            $p = new ProductoPerecedero();
-        } else {
-            $p = new ProductoEstandar();
-        }
-
+        $p = new $clase();
         $p->setId($fila['id']);
         $p->setNombre($fila['nombre']);
         $p->setSku($fila['sku']);
@@ -182,19 +137,5 @@ class Producto extends Model
         $p->setCategoriaId($fila['categoria_id']);
         $p->setTipo($fila['tipo']);
         return $p;
-    }
-
-        public function listarCriticos()
-    {
-        $todos = $this->listarTodos();
-        $criticos = [];
-
-        foreach ($todos as $p) {
-            if ($p->stockCritico()) {
-                $criticos[] = $p;
-            }
-        }
-
-        return $criticos;
     }
 }
