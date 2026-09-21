@@ -1,7 +1,9 @@
 <?php
 
+// clase base de todos los productos, hereda de Model
 class Producto extends Model
 {
+    // propiedades privadas, nadie las toca desde afuera
     private $id, $nombre, $sku, $precioVenta, $stockActual, $stockMinimo, $categoriaId, $tipo;
 
     public function getId() { return $this->id; }
@@ -19,6 +21,7 @@ class Producto extends Model
         $this->nombre = trim($v);
     }
 
+    // el sku se guarda en mayusculas para evitar duplicados
     public function setSku($v)
     {
         if (trim($v) === '') throw new Exception('El SKU no puede estar vacío');
@@ -48,6 +51,7 @@ class Producto extends Model
         $this->categoriaId = ($v === '' || $v === null) ? null : (int)$v;
     }
 
+    // solo acepta los 3 tipos validos
     public function setTipo($v)
     {
         if (!in_array($v, ['estandar', 'fragil', 'perecedero'])) throw new Exception('Tipo inválido');
@@ -56,6 +60,7 @@ class Producto extends Model
 
     public function setId($v) { $this->id = (int)$v; }
 
+    // recibe el array del formulario y llama a cada setter
     public function llenar($datos)
     {
         $this->setNombre($datos['nombre'] ?? '');
@@ -114,11 +119,13 @@ class Producto extends Model
         return array_map([$this, 'mapear'], $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
+    // filtra en php para respetar el stockCritico de cada tipo
     public function listarCriticos()
     {
         return array_values(array_filter($this->listarTodos(), fn($p) => $p->stockCritico()));
     }
 
+    // convierte una fila de la bd en el objeto correcto segun el tipo (polimorfismo)
     private function mapear($fila)
     {
         $clase = match ($fila['tipo']) {

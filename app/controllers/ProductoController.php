@@ -1,5 +1,6 @@
 <?php
 
+// controlador de productos, maneja el crud completo
 class ProductoController
 {
     public function index()
@@ -50,6 +51,7 @@ class ProductoController
         $this->redirect('index');
     }
 
+    // unifica guardar y actualizar, recibe una funcion con la parte distinta
     private function procesar($accion)
     {
         try {
@@ -66,12 +68,14 @@ class ProductoController
         }
     }
 
+    // carga la vista con los datos ya extraidos como variables
     private function render($vista, $datos = [])
     {
         extract($datos);
         require __DIR__ . '/../views/' . $vista . '.php';
     }
 
+    // manda header y termina el script
     private function redirect($accion)
     {
         header("Location: index.php?accion=$accion");

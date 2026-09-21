@@ -1,5 +1,6 @@
 <?php
 
+// cargamos las clases automaticamente desde estas carpetas
 spl_autoload_register(function ($class) {
     foreach ([__DIR__ . '/', __DIR__ . '/../app/models/', __DIR__ . '/../app/controllers/'] as $dir) {
         if (file_exists($file = $dir . $class . '.php')) {
@@ -9,11 +10,13 @@ spl_autoload_register(function ($class) {
     }
 });
 
+// clase singleton para la conexion a mysql
 class Database
 {
     private static $instance = null;
     private $connection;
 
+    // constructor privado para que nadie pueda hacer new Database()
     private function __construct()
     {
         $c = require __DIR__ . '/../config/database.php';
@@ -26,6 +29,7 @@ class Database
         }
     }
 
+    // devuelve siempre la misma conexion (singleton)
     public static function getInstance()
     {
         if (self::$instance === null) {
@@ -37,6 +41,7 @@ class Database
     public function getConnection() { return $this->connection; }
 }
 
+// clase base abstracta q da la conexion a todos los modelos
 abstract class Model
 {
     protected $db;

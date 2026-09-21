@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../core/bootstrap.php';
 
+// array de rutas: accion => [controlador, metodo]
 $rutas = [
     'home' => ['HomeController', 'index'],
     'index' => ['ProductoController', 'index'],
@@ -18,7 +19,9 @@ $rutas = [
     'alertas' => ['AlertaController', 'index'],
 ];
 
+// lee la accion de la url, si no viene usa home
 $accion = $_GET['accion'] ?? 'home';
 [$controlador, $metodo] = $rutas[$accion] ?? $rutas['home'];
 
+// instancia el controlador y ejecuta el metodo
 (new $controlador())->$metodo();
