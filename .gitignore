@@ -3,3 +3,6 @@
 vendor/
 .env
 *.log
+/librerias
+composer.json
+composer.lock

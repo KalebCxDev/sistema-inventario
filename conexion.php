@@ -36,3 +36,5 @@ require_once __DIR__ . '/controladores/CategoriaController.php';
 require_once __DIR__ . '/controladores/MovimientoController.php';
 require_once __DIR__ . '/controladores/HomeController.php';
 require_once __DIR__ . '/controladores/AlertaController.php';
+require_once __DIR__ . '/controladores/ReporteController.php';
+require_once __DIR__ . '/controladores/ExcelController.php';

@@ -12,7 +12,8 @@
     <select name="producto_id" required>
         <option value="">-- Seleccionar --</option>
         <?php foreach ($productos as $p): ?>
-            <option value="<?= $p->getId() ?>">
+            <option value="<?= $p->getId() ?>"
+                <?= ($productoSeleccionado == $p->getId()) ? 'selected' : '' ?>>
                 <?= htmlspecialchars($p->getNombre()) ?> (stock: <?= $p->getStockActual() ?>)
             </option>
         <?php endforeach; ?>
