@@ -124,3 +124,31 @@ button.azul:hover { background: #1d4ed8; }
 .buscador label { margin: 0; font-size: 13px; color: #4b5563; }
 .buscador input { width: 280px; margin: 0; }
 .buscador #contador { color: #6b7280; font-size: 13px; }
+
+.pos-contenedor {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+.pos-productos { flex: 2; }
+.pos-carrito {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    position: sticky;
+    top: 20px;
+}
+.pos-carrito h2 { margin: 0 0 10px; }
+.pos-total {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 14px 0;
+    text-align: right;
+}
+.pos-carrito button { width: 100%; margin-top: 8px; }
+#buscador-pos { margin-bottom: 10px; }
+#tabla-carrito input.cant { width: 60px; padding: 4px; margin: 0; }
+#tabla-carrito td { padding: 6px 8px; }
+.btn-agregar { padding: 4px 10px; font-size: 12px; }

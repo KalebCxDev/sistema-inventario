@@ -38,3 +38,5 @@ require_once __DIR__ . '/controladores/HomeController.php';
 require_once __DIR__ . '/controladores/AlertaController.php';
 require_once __DIR__ . '/controladores/ReporteController.php';
 require_once __DIR__ . '/controladores/ExcelController.php';
+require_once __DIR__ . '/modelos/Venta.php';
+require_once __DIR__ . '/controladores/VentaController.php';

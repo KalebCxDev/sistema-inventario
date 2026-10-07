@@ -12,4 +12,6 @@
         <a href="categorias.php">Categorías</a>
         <a href="movimientos.php">Movimientos</a>
         <a href="alertas.php">Alertas</a>
+        <a href="pos.php">POS</a>
+        <a href="ventas.php">Ventas</a>
     </div>
