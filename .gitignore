@@ -1,8 +1,8 @@
-    .vscode/
-    .idea/
-    vendor/
-    .env
-    *.log
-    /librerias
-    composer.json
-    composer.lock
+.vscode/
+.idea/
+vendor/
+.env
+*.log
+librerias/
+composer.json
+composer.lock    

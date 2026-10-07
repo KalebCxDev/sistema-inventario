@@ -40,3 +40,6 @@ require_once __DIR__ . '/controladores/ReporteController.php';
 require_once __DIR__ . '/controladores/ExcelController.php';
 require_once __DIR__ . '/modelos/Venta.php';
 require_once __DIR__ . '/controladores/VentaController.php';
+require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/modelos/Usuario.php';
+require_once __DIR__ . '/controladores/AuthController.php';

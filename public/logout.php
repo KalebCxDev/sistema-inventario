@@ -1,4 +1,3 @@
 <?php
 require_once __DIR__ . '/../conexion.php';
-requiereLogin();
-(new HomeController())->index();
+(new AuthController())->logout();

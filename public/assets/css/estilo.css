@@ -18,10 +18,12 @@ li a:hover { text-decoration: underline; }
 .menu {
     display: flex;
     gap: 20px;
+    align-items: center;
     margin-bottom: 28px;
     padding-bottom: 14px;
     border-bottom: 1px solid #e5e7eb;
 }
+
 .menu a { color: #4b5563; font-size: 14px; }
 .menu a:hover { color: #2563eb; text-decoration: none; }
 
@@ -152,3 +154,20 @@ button.azul:hover { background: #1d4ed8; }
 #tabla-carrito input.cant { width: 60px; padding: 4px; margin: 0; }
 #tabla-carrito td { padding: 6px 8px; }
 .btn-agregar { padding: 4px 10px; font-size: 12px; }
+
+.login-caja {
+    max-width: 360px;
+    margin: 80px auto;
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+.login-caja h1 { margin-top: 0; }
+.login-caja button { width: 100%; }
+.menu-usuario {
+    margin-left: auto;
+    color: #6b7280;
+    font-size: 13px;
+}
+.menu-usuario a { color: #dc2626; }
