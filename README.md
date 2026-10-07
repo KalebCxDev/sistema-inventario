@@ -13,7 +13,7 @@ Sistema de gestión de inventario con PHP, MySQL y patrón MVC. Incluye control 
 1. Clonar el repositorio dentro de `C:\xampp\htdocs\`:
 
    ```
-   git clone https://github.com/TU_USUARIO/sistema-inventario.git
+   git clone https://github.com/KalebCxDev/sistema-inventario.git
    ```
 
 2. Encender Apache y MySQL desde el panel de XAMPP.
