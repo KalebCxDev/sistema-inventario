@@ -34,7 +34,19 @@ class Venta extends Model
 
     public function listarTodas()
     {
-        return $this->db->query("SELECT * FROM ventas ORDER BY id DESC")
-                        ->fetchAll(PDO::FETCH_ASSOC);
+        return $this->db->query("SELECT * FROM ventas ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function buscarPorId($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM ventas WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function anular($id)
+    {
+        $stmt = $this->db->prepare("UPDATE ventas SET estado = 'anulada' WHERE id = :id");
+        return $stmt->execute([':id' => $id]);
     }
 }
