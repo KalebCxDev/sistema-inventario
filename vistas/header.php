@@ -33,6 +33,10 @@
             <a href="ventas.php">Ventas</a>
         <?php endif; ?>
 
+        <?php if (puedeVer('usuarios')): ?>
+        <a href="usuarios.php">Usuarios</a>
+        <?php endif; ?>
+
         <span class="menu-usuario">
             <?= htmlspecialchars($_SESSION['usuario_nombre'] ?? '') ?> · 
             <a href="logout.php">Salir</a>

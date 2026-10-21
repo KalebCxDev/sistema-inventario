@@ -1,4 +1,4 @@
 <?php
 require_once __DIR__ . '/../conexion.php';
-requiereRol(['admin', 'recepcionista']);
-(new MovimientoController())->guardar();
+requiereLogin();
+(new AlertaController())->index();

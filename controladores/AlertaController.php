@@ -7,6 +7,7 @@ class AlertaController
         $criticos = (new Producto())->listarCriticos();
         $total = count((new Producto())->listarTodos());
         $enAlerta = count($criticos);
-        require __DIR__ . '/../vistas/alertas_lista.php';
+        
+        require __DIR__ . '/../vistas/alertas_lista.php'; // <--- ESTA ES LA CLAVE
     }
 }

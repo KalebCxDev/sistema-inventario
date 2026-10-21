@@ -35,24 +35,48 @@ class Usuario extends Model
 
     public function setRol($v)
     {
+        if (!in_array($v, ['admin', 'vendedor', 'recepcionista'])) {
+            throw new Exception('Rol inválido');
+        }
         $this->rol = $v;
     }
 
     public function guardar()
     {
-        $stmt = $this->db->prepare("INSERT INTO usuarios (nombre, usuario, password, rol)
-                                    VALUES (:n, :u, :p, :r)");
-        $stmt->execute([
-            ':n' => $this->nombre,
-            ':u' => $this->usuario,
-            ':p' => $this->password,
-            ':r' => $this->rol,
-        ]);
-        $this->id = $this->db->lastInsertId();
-        return $this->id;
+        $stmt = $this->db->prepare("INSERT INTO usuarios (nombre, usuario, password, rol) VALUES (:n, :u, :p, :r)");
+        $stmt->execute([':n' => $this->nombre, ':u' => $this->usuario, ':p' => $this->password, ':r' => $this->rol]);
+        return $this->db->lastInsertId();
     }
 
-    // busca un usuario por nombre de usuario y verifica la contraseña
+    public function actualizar()
+    {
+        if ($this->password !== null) {
+            $stmt = $this->db->prepare("UPDATE usuarios SET nombre=:n, usuario=:u, password=:p, rol=:r WHERE id=:id");
+            return $stmt->execute([':n' => $this->nombre, ':u' => $this->usuario, ':p' => $this->password, ':r' => $this->rol, ':id' => $this->id]);
+        } else {
+            $stmt = $this->db->prepare("UPDATE usuarios SET nombre=:n, usuario=:u, rol=:r WHERE id=:id");
+            return $stmt->execute([':n' => $this->nombre, ':u' => $this->usuario, ':r' => $this->rol, ':id' => $this->id]);
+        }
+    }
+
+    public function eliminar()
+    {
+        return $this->db->prepare("DELETE FROM usuarios WHERE id=:id")->execute([':id' => $this->id]);
+    }
+
+    public function listarTodos()
+    {
+        return $this->db->query("SELECT * FROM usuarios ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function buscarPorId($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $fila ? $fila : null;
+    }
+
     public function validar($usuario, $password)
     {
         $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE usuario = :u");
@@ -62,11 +86,6 @@ class Usuario extends Model
         if (!$fila) return null;
         if (!password_verify($password, $fila['password'])) return null;
 
-        return $this->mapear($fila);
-    }
-
-    private function mapear($fila)
-    {
         $u = new Usuario();
         $u->setId($fila['id']);
         $u->setNombre($fila['nombre']);

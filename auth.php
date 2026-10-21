@@ -51,6 +51,8 @@ function puedeVer($seccion)
 {
     $rol = rolActual();
     switch ($seccion) {
+        case 'usuarios':
+            return $rol === 'admin';
         case 'movimientos':
             return in_array($rol, ['admin', 'recepcionista']);
         case 'pos':
