@@ -6,9 +6,10 @@
     <div class="aviso">⚠ Hay <strong><?= $enAlerta ?></strong> producto(s) con stock crítico.</div>
 <?php endif; ?>
 
-<a href="producto_crear.php" class="btn nuevo">+ Nuevo Producto</a>
-<a href="reporte_productos.php" class="btn editar" target="_blank">Exportar PDF</a>
-<a href="reporte_excel.php" class="btn movimiento">Exportar Excel</a>
+<?php if (in_array(rolActual(), ['admin', 'recepcionista'])): ?>
+    <a href="producto_crear.php" class="btn nuevo">+ Nuevo Producto</a>
+<?php endif; ?>
+
 <div class="buscador">
     <label for="buscador">Buscar:</label>
     <input type="text" id="buscador" placeholder="Nombre, SKU o tipo..." autocomplete="off">
@@ -35,10 +36,16 @@
                 <td><?= htmlspecialchars($p->descripcion()) ?></td>
                 <td><?= htmlspecialchars($p->detallesExtra()) ?></td>
                 <td>
-                    <a href="producto_editar.php?id=<?= $p->getId() ?>" class="btn editar">Editar</a>
+                    <?php if (in_array(rolActual(), ['admin', 'recepcionista'])): ?>
+                        <a href="producto_editar.php?id=<?= $p->getId() ?>" class="btn editar">Editar</a>
+                    <?php endif; ?>
+                    
                     <a href="movimientos.php?producto_id=<?= $p->getId() ?>" class="btn movimiento">Movimiento</a>
-                    <a href="producto_eliminar.php?id=<?= $p->getId() ?>" class="btn eliminar"
-                       onclick="return confirm('¿Eliminar producto?')">Eliminar</a>
+                    
+                    <?php if (rolActual() === 'admin'): ?>
+                        <a href="producto_eliminar.php?id=<?= $p->getId() ?>" class="btn eliminar"
+                           onclick="return confirm('¿Eliminar producto?')">Eliminar</a>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>

@@ -26,6 +26,7 @@ class Model
     }
 }
 
+require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/modelos/Producto.php';
 require_once __DIR__ . '/modelos/ProductoPerecedero.php';
 require_once __DIR__ . '/modelos/Categoria.php';

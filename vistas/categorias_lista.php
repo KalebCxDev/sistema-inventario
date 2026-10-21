@@ -6,11 +6,13 @@
     <p class="error"><?= htmlspecialchars($error) ?></p>
 <?php endif; ?>
 
-<form method="POST" action="categoria_guardar.php">
-    <label>Nueva categoría:</label>
-    <input type="text" name="nombre" required>
-    <button type="submit">Agregar</button>
-</form>
+<?php if (in_array(rolActual(), ['admin', 'recepcionista'])): ?>
+    <form method="POST" action="categoria_guardar.php">
+        <label>Nueva categoría:</label>
+        <input type="text" name="nombre" required>
+        <button type="submit">Agregar</button>
+    </form>
+<?php endif; ?>
 
 <table style="max-width:500px">
     <tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
@@ -19,8 +21,10 @@
             <td><?= $c->getId() ?></td>
             <td><?= htmlspecialchars($c->getNombre()) ?></td>
             <td>
-                <a href="categoria_eliminar.php?id=<?= $c->getId() ?>" class="btn eliminar"
-                   onclick="return confirm('¿Eliminar categoría?')">Eliminar</a>
+                <?php if (rolActual() === 'admin'): ?>
+                    <a href="categoria_eliminar.php?id=<?= $c->getId() ?>" class="btn eliminar"
+                       onclick="return confirm('¿Eliminar categoría?')">Eliminar</a>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
