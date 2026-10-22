@@ -11,11 +11,13 @@
 <?php endif; ?>
 
 <table>
-    <tr><th>ID</th><th>Fecha</th><th>Detalle</th><th>Total</th><th>Estado</th><th>Acciones</th></tr>
+    <tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Detalle</th><th>Total</th><th>Estado</th><th>Acciones</th></tr>
     <?php foreach ($ventas as $v): ?>
         <tr>
             <td><?= $v['id'] ?></td>
             <td><?= $v['fecha'] ?></td>
+            <!-- muestra el cliente -->
+            <td><?= htmlspecialchars($v['cliente']) ?></td>
             <td><?= htmlspecialchars($v['detalle']) ?></td>
             <td><?= number_format($v['total'], 2) ?></td>
             <td class="<?= $v['estado'] === 'anulada' ? 'salida' : 'entrada' ?>">

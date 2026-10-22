@@ -12,18 +12,22 @@
 
 <div class="pos-contenedor">
     <div class="pos-productos">
-        <input type="text" id="buscador-pos" placeholder="Buscar producto..." autocomplete="off">
+        <input type="text" id="buscador-pos" placeholder="Buscar o escanear código..." autocomplete="off">
+        <p id="escaneo-error" class="error" style="display:none;">Producto no encontrado</p>
+        
         <table id="tabla-pos">
             <thead>
-                <tr><th>Nombre</th><th>Precio</th><th>Stock</th><th></th></tr>
+                <tr><th>Nombre</th><th>SKU</th><th>Precio</th><th>Stock</th><th></th></tr>
             </thead>
             <tbody>
                 <?php foreach ($productos as $p): ?>
                     <tr data-id="<?= $p->getId() ?>"
                         data-nombre="<?= htmlspecialchars($p->getNombre()) ?>"
+                        data-sku="<?= htmlspecialchars($p->getSku()) ?>"
                         data-precio="<?= $p->getPrecioVenta() ?>"
                         data-stock="<?= $p->getStockActual() ?>">
                         <td><?= htmlspecialchars($p->getNombre()) ?></td>
+                        <td><?= htmlspecialchars($p->getSku()) ?></td>
                         <td><?= number_format($p->getPrecioVenta(), 2) ?></td>
                         <td><?= $p->getStockActual() ?></td>
                         <td>
@@ -49,6 +53,11 @@
         <p class="pos-total">Total: S/ <span id="total">0.00</span></p>
 
         <form method="POST" action="venta_cobrar.php" id="form-cobrar">
+            
+            <!-- campo opcional para el cliente -->
+            <label for="cliente">Cliente / DNI (Opcional):</label>
+            <input type="text" name="cliente" id="cliente" placeholder="Ej. Juan Perez - 12345678" style="margin-bottom: 15px;">
+
             <input type="hidden" name="carrito" id="carrito-input" value="[]">
             <button type="submit" class="azul" id="btn-cobrar" disabled>Cobrar</button>
         </form>

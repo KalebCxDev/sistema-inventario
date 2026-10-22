@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var btnCobrar = document.getElementById('btn-cobrar');
     var btnVaciar = document.getElementById('btn-vaciar');
     var buscador  = document.getElementById('buscador-pos');
+    var errorEscaner = document.getElementById('escaneo-error');
 
     function render() {
         tbody.innerHTML = '';
@@ -30,7 +31,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function agregar(id, nombre, precio, stock) {
         var existente = carrito.find(function (x) { return x.id === id; });
         if (existente) {
-            if (existente.cantidad + 1 > stock) return alert('No hay más stock');
+            if (existente.cantidad + 1 > stock) {
+                alert('No hay más stock de: ' + nombre);
+                return;
+            }
             existente.cantidad++;
         } else {
             carrito.push({ id: id, nombre: nombre, precio: precio, cantidad: 1, stock: stock });
@@ -70,11 +74,54 @@ document.addEventListener('DOMContentLoaded', function () {
         render();
     });
 
-    buscador.addEventListener('keyup', function () {
+    buscador.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            e.preventDefault(); 
+            
+            var q = buscador.value.trim();
+            if (q === '') return;
+
+            errorEscaner.style.display = 'none';
+            var filas = tabla.querySelectorAll('tbody tr');
+            var encontrado = false;
+
+            for (var i = 0; i < filas.length; i++) {
+                var fila = filas[i];
+                var skuTabla = fila.dataset.sku.trim(); 
+
+                if (skuTabla.toLowerCase() === q.toLowerCase()) {
+                    agregar(
+                        parseInt(fila.dataset.id),
+                        fila.dataset.nombre,
+                        parseFloat(fila.dataset.precio),
+                        parseInt(fila.dataset.stock)
+                    );
+                    buscador.value = ''; 
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) {
+                // ¡AQUÍ ESTÁ LA MAGIA PARA DEPURAR!
+                alert('NO SE ENCONTRÓ: "' + q + '". Revisa que el SKU en la tabla sea exactamente igual.');
+                errorEscaner.style.display = 'block';
+                buscador.value = '';
+            }
+        }
+    });
+
+    buscador.addEventListener('input', function () {
         var q = buscador.value.toLowerCase().trim();
-        tabla.querySelectorAll('tbody tr').forEach(function (fila) {
+        var filas = tabla.querySelectorAll('tbody tr');
+
+        for (var i = 0; i < filas.length; i++) {
+            var fila = filas[i];
             var nombre = fila.dataset.nombre.toLowerCase();
-            fila.style.display = nombre.indexOf(q) !== -1 ? '' : 'none';
-        });
+            var sku    = fila.dataset.sku.trim().toLowerCase();
+            
+            var coincide = nombre.indexOf(q) !== -1 || sku.indexOf(q) !== -1;
+            fila.style.display = coincide ? '' : 'none';
+        }
     });
 });
