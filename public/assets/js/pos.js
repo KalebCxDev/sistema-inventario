@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', function () {
     var btnVaciar = document.getElementById('btn-vaciar');
     var buscador  = document.getElementById('buscador-pos');
     var errorEscaner = document.getElementById('escaneo-error');
+    var formCobrar = document.getElementById('form-cobrar');
+
+    var buscadorDni = document.getElementById('buscador-dni');
+    var dniMensaje = document.getElementById('dni-mensaje');
+    var clienteIdInput = document.getElementById('cliente_id');
+    var clienteNombreInput = document.getElementById('cliente_nombre');
+    var modal = document.getElementById('modal-cliente');
+    var modalFecha = document.getElementById('modal-fecha-nacimiento');
 
     function render() {
         tbody.innerHTML = '';
@@ -42,23 +50,21 @@ document.addEventListener('DOMContentLoaded', function () {
         render();
     }
 
+    // 1. Agregar productos con el boton
     tabla.addEventListener('click', function (e) {
         if (!e.target.classList.contains('btn-agregar')) return;
         var tr = e.target.closest('tr');
-        agregar(
-            parseInt(tr.dataset.id),
-            tr.dataset.nombre,
-            parseFloat(tr.dataset.precio),
-            parseInt(tr.dataset.stock)
-        );
+        agregar(parseInt(tr.dataset.id), tr.dataset.nombre, parseFloat(tr.dataset.precio), parseInt(tr.dataset.stock));
     });
 
+    // 2. Quitar productos del carrito
     tbody.addEventListener('click', function (e) {
         if (!e.target.dataset.quitar) return;
         carrito.splice(parseInt(e.target.dataset.quitar), 1);
         render();
     });
 
+    // 3. Editar cantidad desde el carrito
     tbody.addEventListener('change', function (e) {
         if (!e.target.classList.contains('cant')) return;
         var i = parseInt(e.target.dataset.i);
@@ -69,15 +75,18 @@ document.addEventListener('DOMContentLoaded', function () {
         render();
     });
 
+    // 4. Vaciar carrito
     btnVaciar.addEventListener('click', function () {
-        carrito = [];
-        render();
+        if (confirm('¿Seguro que deseas vaciar el carrito?')) {
+            carrito = [];
+            render();
+        }
     });
 
+    // 5. Escaner o busqueda manual de productos
     buscador.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
             e.preventDefault(); 
-            
             var q = buscador.value.trim();
             if (q === '') return;
 
@@ -90,12 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var skuTabla = fila.dataset.sku.trim(); 
 
                 if (skuTabla.toLowerCase() === q.toLowerCase()) {
-                    agregar(
-                        parseInt(fila.dataset.id),
-                        fila.dataset.nombre,
-                        parseFloat(fila.dataset.precio),
-                        parseInt(fila.dataset.stock)
-                    );
+                    agregar(parseInt(fila.dataset.id), fila.dataset.nombre, parseFloat(fila.dataset.precio), parseInt(fila.dataset.stock));
                     buscador.value = ''; 
                     encontrado = true;
                     break;
@@ -103,25 +107,108 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (!encontrado) {
-                // ¡AQUÍ ESTÁ LA MAGIA PARA DEPURAR!
-                alert('NO SE ENCONTRÓ: "' + q + '". Revisa que el SKU en la tabla sea exactamente igual.');
                 errorEscaner.style.display = 'block';
                 buscador.value = '';
             }
         }
     });
 
+    // Filtro visual
     buscador.addEventListener('input', function () {
         var q = buscador.value.toLowerCase().trim();
         var filas = tabla.querySelectorAll('tbody tr');
-
         for (var i = 0; i < filas.length; i++) {
             var fila = filas[i];
             var nombre = fila.dataset.nombre.toLowerCase();
             var sku    = fila.dataset.sku.trim().toLowerCase();
-            
             var coincide = nombre.indexOf(q) !== -1 || sku.indexOf(q) !== -1;
             fila.style.display = coincide ? '' : 'none';
         }
+    });
+
+    // 6. Prevenir cobrar con carrito vacio
+    formCobrar.addEventListener('submit', function(e) {
+        if (carrito.length === 0) {
+            e.preventDefault();
+            alert('El carrito esta vacio, agrega productos antes de cobrar.');
+        }
+    });
+
+    // 7. Buscar DNI
+    buscadorDni.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            e.preventDefault();
+            var dni = buscadorDni.value.trim();
+            
+            if (dni === '') {
+                clienteIdInput.value = '';
+                clienteNombreInput.value = '';
+                dniMensaje.style.display = 'none';
+                return;
+            }
+
+            fetch('ajax_buscar_cliente.php?dni=' + encodeURIComponent(dni))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.existe) {
+                        clienteIdInput.value = data.id;
+                        clienteNombreInput.value = data.nombre;
+                        // muestra nombre y edad
+                        dniMensaje.textContent = 'Cliente: ' + data.nombre + ' (' + data.edad + ' años)';
+                        dniMensaje.style.display = 'block';
+                        buscadorDni.value = '';
+                    } else {
+                        // cliente no existe, abre modal
+                        document.getElementById('modal-dni-texto').textContent = dni;
+                        document.getElementById('modal-dni-valor').value = dni;
+                        document.getElementById('modal-nombres').value = '';
+                        document.getElementById('modal-apellidos').value = '';
+                        modalFecha.value = ''; 
+                        modal.style.display = 'block';
+                    }
+                })
+                .catch(err => alert('Error de conexion al buscar DNI'));
+        }
+    });
+
+    // 8. Guardar cliente nuevo desde el modal
+    document.getElementById('btn-guardar-cliente').addEventListener('click', function() {
+        var dni = document.getElementById('modal-dni-valor').value;
+        var nombres = document.getElementById('modal-nombres').value;
+        var apellidos = document.getElementById('modal-apellidos').value;
+        var fechaNac = modalFecha.value;
+
+        if (nombres.trim() === '' || apellidos.trim() === '' || fechaNac === '') {
+            alert('Por favor, completa nombres, apellidos y fecha de nacimiento.');
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append('dni', dni);
+        formData.append('nombres', nombres);
+        formData.append('apellidos', apellidos);
+        formData.append('fecha_nacimiento', fechaNac);
+
+        fetch('ajax_guardar_cliente.php', { method: 'POST', body: formData })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    clienteIdInput.value = data.id;
+                    clienteNombreInput.value = data.nombre;
+                    // muestra nombre y edad calculada
+                    dniMensaje.textContent = 'Cliente: ' + data.nombre + ' (' + data.edad + ' años)';
+                    dniMensaje.style.display = 'block';
+                    modal.style.display = 'none';
+                    buscadorDni.value = '';
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            });
+    });
+
+    // 9. Cerrar modal
+    document.getElementById('btn-cerrar-modal').addEventListener('click', function() {
+        modal.style.display = 'none';
+        buscadorDni.value = '';
     });
 });

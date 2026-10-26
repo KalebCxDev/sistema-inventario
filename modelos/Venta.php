@@ -5,7 +5,8 @@ class Venta extends Model
     private $id;
     private $total;
     private $detalle;
-    private $cliente; // nueva propiedad
+    private $cliente;
+    private $clienteId;
 
     public function setId($v) { $this->id = (int)$v; }
 
@@ -21,10 +22,14 @@ class Venta extends Model
         $this->detalle = trim($v);
     }
 
-    // si viene vacio, se guarda como varios
     public function setCliente($v)
     {
         $this->cliente = (trim($v) === '') ? 'Varios' : trim($v);
+    }
+
+    public function setClienteId($v)
+    {
+        $this->clienteId = ($v === '' || $v === null) ? null : (int)$v;
     }
 
     public function getId() { return $this->id; }
@@ -34,8 +39,8 @@ class Venta extends Model
 
     public function guardar()
     {
-        $stmt = $this->db->prepare("INSERT INTO ventas (total, detalle, cliente) VALUES (:t, :d, :c)");
-        $stmt->execute([':t' => $this->total, ':d' => $this->detalle, ':c' => $this->cliente]);
+        $stmt = $this->db->prepare("INSERT INTO ventas (total, detalle, cliente, cliente_id) VALUES (:t, :d, :c, :ci)");
+        $stmt->execute([':t' => $this->total, ':d' => $this->detalle, ':c' => $this->cliente, ':ci' => $this->clienteId]);
         $this->id = $this->db->lastInsertId();
         return $this->id;
     }

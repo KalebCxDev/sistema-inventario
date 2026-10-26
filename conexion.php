@@ -45,3 +45,5 @@ require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/modelos/Usuario.php';
 require_once __DIR__ . '/controladores/AuthController.php';
 require_once __DIR__ . '/controladores/UsuarioController.php';
+require_once __DIR__ . '/modelos/Cliente.php';
+require_once __DIR__ . '/controladores/AjaxController.php';

@@ -44,8 +44,8 @@ class VentaController
             $venta = new Venta();
             $venta->setTotal($total);
             $venta->setDetalle(implode(', ', $partes));
-            // captura el cliente del formulario
-            $venta->setCliente($_POST['cliente'] ?? '');
+            $venta->setCliente($_POST['cliente_nombre'] ?? '');
+            $venta->setClienteId($_POST['cliente_id'] ?? null);
             $venta->guardar();
 
             $this->db->commit();
