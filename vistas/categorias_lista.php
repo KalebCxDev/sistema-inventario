@@ -23,7 +23,7 @@
             <td>
                 <?php if (rolActual() === 'admin'): ?>
                     <a href="categoria_eliminar.php?id=<?= $c->getId() ?>" class="btn eliminar"
-                       onclick="return confirm('¿Eliminar categoría?')">Eliminar</a>
+                       onclick="return confirm('¿Seguro que deseas eliminar la categoría &quot;<?= htmlspecialchars($c->getNombre(), ENT_QUOTES) ?>&quot;?')">Eliminar</a>
                 <?php endif; ?>
             </td>
         </tr>

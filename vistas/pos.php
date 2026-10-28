@@ -9,7 +9,12 @@
 <h1>Punto de Venta</h1>
 
 <?php if (isset($_GET['ok'])): ?>
-    <p class="ok">✔ Venta registrada correctamente.</p>
+    <div class="ok" id="mensaje-venta-ok" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 15px;">
+        <span>✔ Venta registrada correctamente.</span>
+        <?php if (!empty($_GET['ticket_id'])): ?>
+            <a href="ver_ticket.php?id=<?= (int)$_GET['ticket_id'] ?>" target="_blank" class="btn azul" style="padding: 4px 10px; font-size: 12px; text-decoration: none;">🖨 Ver / Reimprimir Ticket #<?= (int)$_GET['ticket_id'] ?></a>
+        <?php endif; ?>
+    </div>
 <?php endif; ?>
 
 <?php if (!empty($error)): ?>
@@ -55,43 +60,46 @@
             
             <label for="buscador-dni">DNI del Cliente (Opcional):</label>
             <!-- Le quite el required y agregue autocomplete="off" -->
-            <input type="text" id="buscador-dni" placeholder="Escribir o escanear DNI..." autocomplete="off">
+            <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+                <input type="text" id="buscador-dni" maxlength="8" placeholder="Escribir o escanear DNI (8 dígitos)..." autocomplete="off" style="flex: 1;">
+                <button type="button" id="btn-quitar-cliente" class="btn eliminar" style="display:none; padding: 6px 10px; font-size: 12px;" title="Quitar cliente seleccionado">✕ Quitar</button>
+            </div>
             <p id="dni-mensaje" class="ok" style="display:none; font-size: 13px; margin: 5px 0;"></p>
 
             <input type="hidden" name="cliente_id" id="cliente_id" value="">
             <input type="hidden" name="cliente_nombre" id="cliente_nombre" value="">
             <input type="hidden" name="carrito" id="carrito-input" value="[]">
             
-            <!-- El boton debe ser type="submit" y NO tener disabled (el JS lo controla) -->
-            <button type="button" class="azul" id="btn-cobrar" onclick="document.getElementById('form-cobrar').submit()">Cobrar</button>
+            <button type="submit" class="azul" id="btn-cobrar">Cobrar</button>
         </form>
         
         <button type="button" id="btn-vaciar" class="btn eliminar">Vaciar carrito</button>
     </div>
 </div>
 
-<!-- El modal debe estar FUERA del formulario -->
+<!-- Modal Cliente -->
 <div class="modal-fondo" id="modal-cliente">
     <div class="modal-caja">
         <h3>Registrar Nuevo Cliente</h3>
         <p style="font-size: 13px;">El DNI <strong id="modal-dni-texto"></strong> no existe.</p>
         <input type="hidden" id="modal-dni-valor">
         
-        <label>Nombres:</label>
-        <input type="text" id="modal-nombres">
+        <label for="modal-nombres">Nombres:</label>
+        <input type="text" id="modal-nombres" autocomplete="off">
         
-        <!-- ... (dentro del modal, abajo de apellidos) ... -->
-        <label>Apellidos:</label>
-        <input type="text" id="modal-apellidos">
+        <label for="modal-apellidos">Apellidos:</label>
+        <input type="text" id="modal-apellidos" autocomplete="off">
         
-        <!-- NUEVO CAMPO -->
-        <label>Fecha de Nacimiento:</label>
+        <label for="modal-fecha-nacimiento">Fecha de Nacimiento:</label>
         <input type="date" id="modal-fecha-nacimiento">
         
-        <button type="button" class="azul" id="btn-guardar-cliente" style="margin-top: 15px;">Guardar y Usar</button>
-        <button type="button" class="btn eliminar" id="btn-cerrar-modal" style="margin-top: 15px;">Cancelar</button>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button type="button" class="azul" id="btn-guardar-cliente" style="flex: 1;">Guardar y Usar</button>
+            <button type="button" class="btn eliminar" id="btn-cerrar-modal">Cancelar</button>
+        </div>
+    </div>
 </div>
 
-<script src="assets/js/pos.js?v=2"></script>
+<script src="assets/js/pos.js?v=3"></script>
 
 <?php require __DIR__ . '/footer.php'; ?>

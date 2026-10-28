@@ -46,10 +46,10 @@ class VentaController
             $venta->setDetalle(implode(', ', $partes));
             $venta->setCliente($_POST['cliente_nombre'] ?? '');
             $venta->setClienteId($_POST['cliente_id'] ?? null);
-            $venta->guardar();
+            $ventaId = $venta->guardar();
 
             $this->db->commit();
-            header('Location: pos.php?ok=1');
+            header('Location: pos.php?ok=1&ticket_id=' . $ventaId);
             exit;
         } catch (Exception $e) {
             if (isset($this->db) && $this->db->inTransaction()) {
@@ -59,6 +59,52 @@ class VentaController
             $error = $e->getMessage();
             require __DIR__ . '/../vistas/pos.php';
         }
+    }
+
+    public function ticket()
+    {
+        $id = (int)($_GET['id'] ?? 0);
+        $venta = (new Venta())->buscarPorId($id);
+
+        if (!$venta) {
+            header('Location: pos.php');
+            exit;
+        }
+
+        $cliente = null;
+        if (!empty($venta['cliente_id'])) {
+            $stmt = conectar()->prepare("SELECT * FROM clientes WHERE id = :id");
+            $stmt->execute([':id' => $venta['cliente_id']]);
+            $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        // Parsear detalle para ítems del ticket
+        $items = [];
+        if (!empty($venta['detalle'])) {
+            $partes = explode(', ', $venta['detalle']);
+            foreach ($partes as $parte) {
+                $pos = strrpos($parte, ' x');
+                if ($pos !== false) {
+                    $nombre = trim(substr($parte, 0, $pos));
+                    $cant = (int)trim(substr($parte, $pos + 2));
+                    
+                    // Buscar precio de venta del producto si existe
+                    $stmtProd = conectar()->prepare("SELECT precio_venta FROM productos WHERE nombre = :n LIMIT 1");
+                    $stmtProd->execute([':n' => $nombre]);
+                    $prod = $stmtProd->fetch(PDO::FETCH_ASSOC);
+                    $precio = $prod ? (float)$prod['precio_venta'] : 0;
+
+                    $items[] = [
+                        'nombre' => $nombre,
+                        'cantidad' => $cant,
+                        'precio' => $precio,
+                        'subtotal' => $precio * $cant
+                    ];
+                }
+            }
+        }
+
+        require __DIR__ . '/../vistas/ver_ticket.php';
     }
 
     public function historial()

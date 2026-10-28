@@ -20,7 +20,7 @@
                 <a href="usuario_editar.php?id=<?= $u['id'] ?>" class="btn editar">Editar</a>
                 <?php if ($u['id'] != $_SESSION['usuario_id']): ?>
                     <a href="usuario_eliminar.php?id=<?= $u['id'] ?>" class="btn eliminar"
-                       onclick="return confirm('¿Eliminar usuario?')">Eliminar</a>
+                       onclick="return confirm('¿Seguro que deseas eliminar al usuario &quot;<?= htmlspecialchars($u['usuario'], ENT_QUOTES) ?>&quot;?')">Eliminar</a>
                 <?php endif; ?>
             </td>
         </tr>

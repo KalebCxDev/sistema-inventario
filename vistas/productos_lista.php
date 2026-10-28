@@ -44,7 +44,7 @@
                     
                     <?php if (rolActual() === 'admin'): ?>
                         <a href="producto_eliminar.php?id=<?= $p->getId() ?>" class="btn eliminar"
-                           onclick="return confirm('¿Eliminar producto?')">Eliminar</a>
+                           onclick="return confirm('¿Seguro que deseas eliminar el producto &quot;<?= htmlspecialchars($p->getNombre(), ENT_QUOTES) ?>&quot;?')">Eliminar</a>
                     <?php endif; ?>
                 </td>
             </tr>

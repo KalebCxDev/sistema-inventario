@@ -23,10 +23,10 @@ function valorCampo($producto, $getter, $default = '')
     <?php endif; ?>
 
     <label>Nombre:</label>
-    <input type="text" name="nombre" value="<?= valorCampo($producto, 'getNombre') ?>" required>
+    <input type="text" name="nombre" value="<?= valorCampo($producto, 'getNombre') ?>" required autofocus>
 
     <label>SKU:</label>
-    <input type="text" name="sku" value="<?= valorCampo($producto, 'getSku') ?>" required>
+    <input type="text" name="sku" value="<?= valorCampo($producto, 'getSku') ?>" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required>
 
     <label>Precio de venta:</label>
     <input type="number" name="precio_venta" step="0.01" min="0"

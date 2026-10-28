@@ -17,7 +17,7 @@ $accionForm = $esNuevo ? 'usuario_guardar.php' : 'usuario_actualizar.php';
     <?php endif; ?>
 
     <label>Nombre completo:</label>
-    <input type="text" name="nombre" value="<?= $esNuevo ? '' : htmlspecialchars($usuario['nombre']) ?>" required>
+    <input type="text" name="nombre" value="<?= $esNuevo ? '' : htmlspecialchars($usuario['nombre']) ?>" required autofocus>
 
     <label>Nombre de usuario (para iniciar sesión):</label>
     <input type="text" name="usuario" value="<?= $esNuevo ? '' : htmlspecialchars($usuario['usuario']) ?>" required>
