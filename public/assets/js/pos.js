@@ -22,19 +22,19 @@ document.addEventListener('DOMContentLoaded', function () {
     var btnGuardarCliente = document.getElementById('btn-guardar-cliente');
     var btnCerrarModal = document.getElementById('btn-cerrar-modal');
 
-    // 0. Auto-focus al cargar la página en el buscador de productos
+    // 0. Auto-focus al cargar la pÃ¡gina en el buscador de productos
     if (buscador) {
         buscador.focus();
     }
 
-    // Abrir automáticamente el ticket en nueva pestaña si acaba de cobrarse una venta
+    // Abrir automÃ¡ticamente el ticket en nueva pestaÃ±a si acaba de cobrarse una venta
     var urlParams = new URLSearchParams(window.location.search);
     var ticketId = urlParams.get('ticket_id');
     if (ticketId) {
         window.open('ver_ticket.php?id=' + encodeURIComponent(ticketId), '_blank');
     }
 
-    // Limpiar alertas de éxito después de 6 segundos para permitir leer o dar clic al botón de ticket
+    // Limpiar alertas de Ã©xito despuÃ©s de 6 segundos para permitir leer o dar clic al botÃ³n de ticket
     var alertaOk = document.getElementById('mensaje-venta-ok') || document.querySelector('.ok');
     if (alertaOk && alertaOk.id !== 'dni-mensaje') {
         setTimeout(function () {
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var existente = carrito.find(function (x) { return x.id === id; });
         if (existente) {
             if (existente.cantidad + 1 > stock) {
-                alert('No hay más stock disponible de: ' + nombre + ' (Stock: ' + stock + ')');
+                alert('No hay mas stock disponible de: ' + nombre + ' (Stock: ' + stock + ')');
                 return;
             }
             existente.cantidad++;
@@ -109,13 +109,13 @@ document.addEventListener('DOMContentLoaded', function () {
         modalApellidos.value = '';
         modalFecha.value = '';
         modal.style.display = 'block';
-        // Enfoque automático al primer input del modal
+        // Enfoque automÃ¡tico al primer input del modal
         setTimeout(function () {
             modalNombres.focus();
         }, 50);
     }
 
-    // 1. Agregar productos con el botón
+    // 1. Agregar productos con el botÃ³n
     tabla.addEventListener('click', function (e) {
         if (!e.target.classList.contains('btn-agregar')) return;
         var tr = e.target.closest('tr');
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
         render();
     });
 
-    // 3. Editar cantidad desde el carrito con validación inmediata de stock
+    // 3. Editar cantidad desde el carrito con validaciÃ³n inmediata de stock
     tbody.addEventListener('change', function (e) {
         if (!e.target.classList.contains('cant')) return;
         var i = parseInt(e.target.dataset.i);
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // 5. Escáner o búsqueda de productos
+    // 5. EscÃ¡ner o bÃºsqueda de productos
     buscador.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
             e.preventDefault();
@@ -203,11 +203,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // 6. Validación y Confirmaciones antes de Cobrar
+    // 6. ValidaciÃ³n y Confirmaciones antes de Cobrar
     formCobrar.addEventListener('submit', function (e) {
         if (carrito.length === 0) {
             e.preventDefault();
-            alert('El carrito está vacío. Agrega productos antes de cobrar.');
+            alert('El carrito esta¡ vaci­o. Agrega productos antes de cobrar.');
             return;
         }
 
@@ -218,9 +218,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (clienteNombre === '') {
             // Caso sin cliente definido
             confirmacion = confirm(
-                'No hay ningún cliente asignado a la venta.\n\n' +
+                'No hay ningun cliente asignado a la venta.\n\n' +
                 'Total a cobrar: S/ ' + totalVenta + '\n' +
-                '¿Desea continuar con la venta a Público General?'
+                '¿Desea continuar con la venta a Publico General?'
             );
         } else {
             // Caso con cliente definido
@@ -232,6 +232,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!confirmacion) {
             e.preventDefault();
+            btnCobrar.disabled = false;
+            btnCobrar.textContent = 'Cobrar';
             return;
         }
 
@@ -240,12 +242,12 @@ document.addEventListener('DOMContentLoaded', function () {
         btnCobrar.textContent = 'Procesando...';
     });
 
-    // Solo permitir números en el buscador de DNI
+    // Solo permitir nÃºmeros en el buscador de DNI
     buscadorDni.addEventListener('input', function () {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
 
-    // 7. Buscar DNI con validación
+    // 7. Buscar DNI con validaciÃ³n
     buscadorDni.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
             e.preventDefault();
@@ -257,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (dni.length !== 8) {
-                alert('El DNI debe contener exactamente 8 dígitos.');
+                alert('El DNI debe contener exactamente 8 digitos.');
                 return;
             }
 
@@ -267,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (data.existe) {
                         clienteIdInput.value = data.id;
                         clienteNombreInput.value = data.nombre;
-                        dniMensaje.textContent = 'Cliente: ' + data.nombre + (data.edad ? ' (' + data.edad + ' años)' : '');
+                        dniMensaje.textContent = 'Cliente: ' + data.nombre + (data.edad ? ' (' + data.edad + ' aÃ±os)' : '');
                         dniMensaje.style.display = 'block';
                         if (btnQuitarCliente) btnQuitarCliente.style.display = 'inline-block';
                         buscadorDni.value = '';
@@ -277,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 })
                 .catch(function () {
-                    alert('Error de conexión al buscar DNI.');
+                    alert('Error de conexion al buscar DNI.');
                 });
         }
     });
@@ -321,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.ok) {
                     clienteIdInput.value = data.id;
                     clienteNombreInput.value = data.nombre;
-                    dniMensaje.textContent = 'Cliente: ' + data.nombre + (data.edad ? ' (' + data.edad + ' años)' : '');
+                    dniMensaje.textContent = 'Cliente: ' + data.nombre + (data.edad ? ' (' + data.edad + ' Años)' : '');
                     dniMensaje.style.display = 'block';
                     if (btnQuitarCliente) btnQuitarCliente.style.display = 'inline-block';
                     modal.style.display = 'none';
@@ -349,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // 9. Cerrar modal con botón y tecla Escape
+    // 9. Cerrar modal con botÃ³n y tecla Escape
     btnCerrarModal.addEventListener('click', cerrarModalCliente);
 
     document.addEventListener('keydown', function (e) {
@@ -368,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!inputTicket) return;
         var num = inputTicket.value.trim();
         if (!num || parseInt(num, 10) <= 0) {
-            alert('Por favor ingrese un n�mero de ticket v�lido.');
+            alert('Por favor ingrese un número de ticket válido.');
             inputTicket.focus();
             return;
         }

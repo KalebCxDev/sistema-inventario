@@ -450,6 +450,18 @@ td .btn {
     font-weight: 600;
 }
 
+/* Estado deshabilitado / procesando para evitar doble clic en el cobro */
+#form-cobrar button:disabled,
+#btn-cobrar:disabled {
+    background-color: #64748b !important;
+    border-color: #64748b !important;
+    color: #f1f5f9 !important;
+    cursor: wait !important;
+    opacity: 0.65 !important;
+    box-shadow: none !important;
+    pointer-events: none;
+}
+
 /* Reset para botones inline dentro de formularios/cajas en el carrito */
 .pos-carrito div[style*="display: flex"] button,
 .pos-carrito .btn-inline,
@@ -664,5 +676,4 @@ td .btn {
         display: inline-flex; 
         width: auto; 
     }
-}
 }
