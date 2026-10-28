@@ -8,23 +8,33 @@
 
 <a href="usuario_crear.php" class="btn nuevo">+ Nuevo Usuario</a>
 
-<table style="max-width:700px">
-    <tr><th>ID</th><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Acciones</th></tr>
-    <?php foreach ($usuarios as $u): ?>
-        <tr>
-            <td><?= $u['id'] ?></td>
-            <td><?= htmlspecialchars($u['nombre']) ?></td>
-            <td><?= htmlspecialchars($u['usuario']) ?></td>
-            <td><?= ucfirst($u['rol']) ?></td>
-            <td>
-                <a href="usuario_editar.php?id=<?= $u['id'] ?>" class="btn editar">Editar</a>
-                <?php if ($u['id'] != $_SESSION['usuario_id']): ?>
-                    <a href="usuario_eliminar.php?id=<?= $u['id'] ?>" class="btn eliminar"
-                       onclick="return confirm('¿Seguro que deseas eliminar al usuario &quot;<?= htmlspecialchars($u['usuario'], ENT_QUOTES) ?>&quot;?')">Eliminar</a>
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</table>
+<div class="table-responsive" style="max-width: 800px; margin-top: 18px;">
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+            <?php foreach ($usuarios as $u): ?>
+                <tr>
+                    <td><strong>#<?= $u['id'] ?></strong></td>
+                    <td style="font-weight: 500;"><?= htmlspecialchars($u['nombre']) ?></td>
+                    <td><code><?= htmlspecialchars($u['usuario']) ?></code></td>
+                    <td>
+                        <span class="badge" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">
+                            <?= ucfirst($u['rol']) ?>
+                        </span>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <a href="usuario_editar.php?id=<?= $u['id'] ?>" class="btn editar">Editar</a>
+                        <?php if ($u['id'] != $_SESSION['usuario_id']): ?>
+                            <a href="usuario_eliminar.php?id=<?= $u['id'] ?>" class="btn eliminar"
+                               onclick="return confirm('¿Seguro que deseas eliminar al usuario &quot;<?= htmlspecialchars($u['usuario'], ENT_QUOTES) ?>&quot;?')">Eliminar</a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
 <?php require __DIR__ . '/footer.php'; ?>

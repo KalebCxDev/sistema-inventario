@@ -7,27 +7,35 @@
 <?php endif; ?>
 
 <?php if (in_array(rolActual(), ['admin', 'recepcionista'])): ?>
-    <form method="POST" action="categoria_guardar.php">
-        <label>Nueva categoría:</label>
-        <input type="text" name="nombre" required>
-        <button type="submit">Agregar</button>
+    <form method="POST" action="categoria_guardar.php" style="margin-bottom: 24px;">
+        <label for="input-nombre-cat">Nueva categoría:</label>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="text" id="input-nombre-cat" name="nombre" placeholder="Nombre de categoría..." required style="margin: 0; flex: 1;">
+            <button type="submit" class="azul" style="margin: 0;">Agregar</button>
+        </div>
     </form>
 <?php endif; ?>
 
-<table style="max-width:500px">
-    <tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
-    <?php foreach ($categorias as $c): ?>
-        <tr>
-            <td><?= $c->getId() ?></td>
-            <td><?= htmlspecialchars($c->getNombre()) ?></td>
-            <td>
-                <?php if (rolActual() === 'admin'): ?>
-                    <a href="categoria_eliminar.php?id=<?= $c->getId() ?>" class="btn eliminar"
-                       onclick="return confirm('¿Seguro que deseas eliminar la categoría &quot;<?= htmlspecialchars($c->getNombre(), ENT_QUOTES) ?>&quot;?')">Eliminar</a>
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</table>
+<div class="table-responsive" style="max-width: 600px;">
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+            <?php foreach ($categorias as $c): ?>
+                <tr>
+                    <td><strong>#<?= $c->getId() ?></strong></td>
+                    <td style="font-weight: 500;"><?= htmlspecialchars($c->getNombre()) ?></td>
+                    <td>
+                        <?php if (rolActual() === 'admin'): ?>
+                            <a href="categoria_eliminar.php?id=<?= $c->getId() ?>" class="btn eliminar"
+                               onclick="return confirm('¿Seguro que deseas eliminar la categoría &quot;<?= htmlspecialchars($c->getNombre(), ENT_QUOTES) ?>&quot;?')">Eliminar</a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
 <?php require __DIR__ . '/footer.php'; ?>

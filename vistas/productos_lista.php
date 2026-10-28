@@ -16,43 +16,49 @@
     <span id="contador"><?= count($productos) ?> de <?= count($productos) ?> productos</span>
 </div>
 
-<table id="tabla-productos">
-    <thead>
-        <tr>
-            <th>ID</th><th>Nombre</th><th>SKU</th><th>Precio</th><th>Stock</th>
-            <th>Mínimo</th><th>Tipo</th><th>Descripción</th><th>Detalles</th><th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($productos as $p): ?>
-            <tr class="<?= $p->stockCritico() ? 'critico' : '' ?>">
-                <td><?= $p->getId() ?></td>
-                <td><?= htmlspecialchars($p->getNombre()) ?></td>
-                <td><?= htmlspecialchars($p->getSku()) ?></td>
-                <td><?= number_format($p->getPrecioVenta(), 2) ?></td>
-                <td><?= $p->getStockActual() ?></td>
-                <td><?= $p->getStockMinimo() ?></td>
-                <td><?= $p->getTipo() ?></td>
-                <td><?= htmlspecialchars($p->descripcion()) ?></td>
-                <td><?= htmlspecialchars($p->detallesExtra()) ?></td>
-                <td>
-                    <?php if (in_array(rolActual(), ['admin', 'recepcionista'])): ?>
-                        <a href="producto_editar.php?id=<?= $p->getId() ?>" class="btn editar">Editar</a>
-                    <?php endif; ?>
-                    
-                    <a href="movimientos.php?producto_id=<?= $p->getId() ?>" class="btn movimiento">Movimiento</a>
-                    
-                    <?php if (rolActual() === 'admin'): ?>
-                        <a href="producto_eliminar.php?id=<?= $p->getId() ?>" class="btn eliminar"
-                           onclick="return confirm('¿Seguro que deseas eliminar el producto &quot;<?= htmlspecialchars($p->getNombre(), ENT_QUOTES) ?>&quot;?')">Eliminar</a>
-                    <?php endif; ?>
-                </td>
+<div class="table-responsive">
+    <table id="tabla-productos">
+        <thead>
+            <tr>
+                <th>ID</th><th>Nombre</th><th>SKU</th><th>Precio</th><th>Stock</th>
+                <th>Mínimo</th><th>Tipo</th><th>Descripción</th><th>Detalles</th><th>Acciones</th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php foreach ($productos as $p): ?>
+                <tr class="<?= $p->stockCritico() ? 'critico' : '' ?>">
+                    <td><?= $p->getId() ?></td>
+                    <td style="font-weight: 500;"><?= htmlspecialchars($p->getNombre()) ?></td>
+                    <td><code><?= htmlspecialchars($p->getSku()) ?></code></td>
+                    <td style="font-weight: 600;">S/ <?= number_format($p->getPrecioVenta(), 2) ?></td>
+                    <td>
+                        <span class="<?= $p->stockCritico() ? 'salida' : '' ?>">
+                            <?= $p->getStockActual() ?>
+                        </span>
+                    </td>
+                    <td><?= $p->getStockMinimo() ?></td>
+                    <td><span style="text-transform: capitalize;"><?= $p->getTipo() ?></span></td>
+                    <td><?= htmlspecialchars($p->descripcion()) ?></td>
+                    <td><?= htmlspecialchars($p->detallesExtra()) ?></td>
+                    <td style="white-space: nowrap;">
+                        <?php if (in_array(rolActual(), ['admin', 'recepcionista'])): ?>
+                            <a href="producto_editar.php?id=<?= $p->getId() ?>" class="btn editar">Editar</a>
+                        <?php endif; ?>
+                        
+                        <a href="movimientos.php?producto_id=<?= $p->getId() ?>" class="btn movimiento">Movimiento</a>
+                        
+                        <?php if (rolActual() === 'admin'): ?>
+                            <a href="producto_eliminar.php?id=<?= $p->getId() ?>" class="btn eliminar"
+                               onclick="return confirm('¿Seguro que deseas eliminar el producto &quot;<?= htmlspecialchars($p->getNombre(), ENT_QUOTES) ?>&quot;?')">Eliminar</a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
-<p id="sin-resultados" class="aviso" style="display:none;">
+<p id="sin-resultados" class="aviso" style="display:none; margin-top: 16px;">
     No se encontraron productos con ese criterio.
 </p>
 

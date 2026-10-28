@@ -1,5 +1,3 @@
-
-</body>
 <footer>
     <br><br>
     <hr>
@@ -9,5 +7,9 @@
         <li><a href="https://istpoxapampa.edu.pe/" target="_blank">Pagina Instituto</a></li>
     </ul>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
 
 </html>

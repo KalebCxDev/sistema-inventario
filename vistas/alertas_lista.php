@@ -4,29 +4,39 @@
 
 <div class="aviso">
     <strong>Total de productos:</strong> <?= $total ?><br>
-    <strong>Productos en alerta:</strong> <?= $enAlerta ?>
+    <strong>Productos en alerta crítica:</strong> <?= $enAlerta ?>
 </div>
 
 <?php if ($enAlerta === 0): ?>
-    <p class="ok">✔ Todo en orden. No hay productos con stock crítico.</p>
+    <p class="ok">✔ Todo en orden. No hay productos con stock crítico en este momento.</p>
 <?php else: ?>
-    <table>
-        <tr>
-            <th>ID</th><th>Nombre</th><th>SKU</th><th>Stock actual</th>
-            <th>Stock mínimo</th><th>Tipo</th><th>Detalles</th>
-        </tr>
-        <?php foreach ($criticos as $p): ?>
-            <tr class="critico">
-                <td><?= $p->getId() ?></td>
-                <td><?= htmlspecialchars($p->getNombre()) ?></td>
-                <td><?= htmlspecialchars($p->getSku()) ?></td>
-                <td><?= $p->getStockActual() ?></td>
-                <td><?= $p->getStockMinimo() ?></td>
-                <td><?= $p->getTipo() ?></td>
-                <td><?= htmlspecialchars($p->detallesExtra()) ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th><th>Nombre</th><th>SKU</th><th>Stock actual</th>
+                    <th>Stock mínimo</th><th>Tipo</th><th>Detalles</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($criticos as $p): ?>
+                    <tr class="critico">
+                        <td><strong>#<?= $p->getId() ?></strong></td>
+                        <td style="font-weight: 500;"><?= htmlspecialchars($p->getNombre()) ?></td>
+                        <td><code><?= htmlspecialchars($p->getSku()) ?></code></td>
+                        <td>
+                            <span class="salida" style="font-weight: 700;">
+                                <?= $p->getStockActual() ?>
+                            </span>
+                        </td>
+                        <td><?= $p->getStockMinimo() ?></td>
+                        <td><span style="text-transform: capitalize;"><?= $p->getTipo() ?></span></td>
+                        <td><?= htmlspecialchars($p->detallesExtra()) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 <?php endif; ?>
 
 <?php require __DIR__ . '/footer.php'; ?>

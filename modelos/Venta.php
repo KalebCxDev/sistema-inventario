@@ -61,4 +61,10 @@ class Venta
         $dao = new VentaDAO(conectar());
         return $dao->anular($id);
     }
+
+    public function obtenerVentasUltimos7Dias()
+    {
+        $dao = new VentaDAO(conectar());
+        return $dao->obtenerVentasUltimos7Dias();
+    }
 }

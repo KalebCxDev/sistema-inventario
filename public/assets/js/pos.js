@@ -359,4 +359,33 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
+    // 10. Reimpresion rapida de tickets
+    var inputTicket = document.getElementById('input-ticket');
+    var btnReimprimir = document.getElementById('btn-reimprimir');
+
+    function reimprimirTicket() {
+        if (!inputTicket) return;
+        var num = inputTicket.value.trim();
+        if (!num || parseInt(num, 10) <= 0) {
+            alert('Por favor ingrese un número de ticket válido.');
+            inputTicket.focus();
+            return;
+        }
+        window.open('ver_ticket.php?id=' + encodeURIComponent(num), '_blank');
+        inputTicket.value = '';
+    }
+
+    if (btnReimprimir) {
+        btnReimprimir.addEventListener('click', reimprimirTicket);
+    }
+
+    if (inputTicket) {
+        inputTicket.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                e.preventDefault();
+                reimprimirTicket();
+            }
+        });
+    }
 });

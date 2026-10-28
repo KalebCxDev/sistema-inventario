@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Sistema de Inventario</title>
     <link rel="stylesheet" href="assets/css/estilo.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="menu">
@@ -41,4 +42,6 @@
             <?= htmlspecialchars($_SESSION['usuario_nombre'] ?? '') ?> · 
             <a href="logout.php">Salir</a>
         </span>
+    </div>
+
     </div>
