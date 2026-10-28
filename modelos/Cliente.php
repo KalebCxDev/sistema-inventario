@@ -1,12 +1,12 @@
 <?php
 
-class Cliente extends Model
+class Cliente
 {
     private $id;
     private $dni;
     private $nombres;
     private $apellidos;
-    private $fecha_nacimiento; // nueva propiedad
+    private $fecha_nacimiento;
 
     public function setId($v) { $this->id = (int)$v; }
     public function getId() { return $this->id; }
@@ -16,7 +16,6 @@ class Cliente extends Model
     public function getFechaNacimiento() { return $this->fecha_nacimiento; }
     public function getNombreCompleto() { return trim($this->nombres . ' ' . $this->apellidos); }
 
-    // calcula la edad a partir de la fecha
     public function getEdad()
     {
         if (!$this->fecha_nacimiento) return 0;
@@ -43,7 +42,6 @@ class Cliente extends Model
         $this->apellidos = trim($v);
     }
 
-    // valida que la fecha no sea futura
     public function setFechaNacimiento($v)
     {
         if (trim($v) === '') throw new Exception('La fecha de nacimiento es obligatoria');
@@ -53,26 +51,13 @@ class Cliente extends Model
 
     public function guardar()
     {
-        $stmt = $this->db->prepare("INSERT INTO clientes (dni, nombres, apellidos, fecha_nacimiento) VALUES (:d, :n, :a, :f)");
-        $stmt->execute([':d' => $this->dni, ':n' => $this->nombres, ':a' => $this->apellidos, ':f' => $this->fecha_nacimiento]);
-        $this->id = $this->db->lastInsertId();
-        return $this->id;
+        $dao = new ClienteDAO(conectar());
+        return $dao->guardar($this);
     }
 
     public function buscarPorDni($dni)
     {
-        $stmt = $this->db->prepare("SELECT * FROM clientes WHERE dni = :d");
-        $stmt->execute([':d' => $dni]);
-        $fila = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if (!$fila) return null;
-
-        $c = new Cliente();
-        $c->setId($fila['id']);
-        $c->setDni($fila['dni']);
-        $c->setNombres($fila['nombres']);
-        $c->setApellidos($fila['apellidos']);
-        $c->setFechaNacimiento($fila['fecha_nacimiento']); // añadido
-        return $c;
+        $dao = new ClienteDAO(conectar());
+        return $dao->buscarPorDni($dni);
     }
 }

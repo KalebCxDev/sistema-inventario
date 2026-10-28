@@ -1,10 +1,18 @@
 <?php
 
-class Movimiento extends Model
+class Movimiento
 {
+    private $id;
     private $productoId;
     private $tipo;
     private $cantidad;
+
+    public function getId() { return $this->id; }
+    public function getProductoId() { return $this->productoId; }
+    public function getTipo() { return $this->tipo; }
+    public function getCantidad() { return $this->cantidad; }
+
+    public function setId($v) { $this->id = (int)$v; }
 
     public function setProductoId($v)
     {
@@ -28,36 +36,13 @@ class Movimiento extends Model
 
     public function registrar()
     {
-        $producto = (new Producto())->buscarPorId($this->productoId);
-        if (!$producto) throw new Exception('Producto no encontrado');
-
-        if ($this->tipo === 'salida' && $producto->getStockActual() < $this->cantidad) {
-            throw new Exception('Stock insuficiente para la salida');
-        }
-
-        if ($this->tipo === 'entrada') {
-            $nuevo = $producto->getStockActual() + $this->cantidad;
-        } else {
-            $nuevo = $producto->getStockActual() - $this->cantidad;
-        }
-
-        $producto->setStockActual($nuevo);
-        $producto->actualizar();
-
-        $stmt = $this->db->prepare("INSERT INTO movimientos 
-            (producto_id, tipo, cantidad) VALUES (:p, :t, :c)");
-        $stmt->execute([
-            ':p' => $this->productoId,
-            ':t' => $this->tipo,
-            ':c' => $this->cantidad,
-        ]);
-
-        return $this->db->lastInsertId();
+        $dao = new MovimientoDAO(conectar());
+        return $dao->registrar($this);
     }
 
     public function listarTodos()
     {
-        return $this->db->query("SELECT * FROM movimientos ORDER BY id DESC")
-                        ->fetchAll(PDO::FETCH_ASSOC);
+        $dao = new MovimientoDAO(conectar());
+        return $dao->listarTodos();
     }
 }

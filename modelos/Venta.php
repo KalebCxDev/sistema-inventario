@@ -1,6 +1,6 @@
 <?php
 
-class Venta extends Model
+class Venta
 {
     private $id;
     private $total;
@@ -36,30 +36,29 @@ class Venta extends Model
     public function getTotal() { return $this->total; }
     public function getDetalle() { return $this->detalle; }
     public function getCliente() { return $this->cliente; }
+    public function getClienteId() { return $this->clienteId; }
 
     public function guardar()
     {
-        $stmt = $this->db->prepare("INSERT INTO ventas (total, detalle, cliente, cliente_id) VALUES (:t, :d, :c, :ci)");
-        $stmt->execute([':t' => $this->total, ':d' => $this->detalle, ':c' => $this->cliente, ':ci' => $this->clienteId]);
-        $this->id = $this->db->lastInsertId();
-        return $this->id;
+        $dao = new VentaDAO(conectar());
+        return $dao->guardar($this);
     }
 
     public function listarTodas()
     {
-        return $this->db->query("SELECT * FROM ventas ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
+        $dao = new VentaDAO(conectar());
+        return $dao->listarTodas();
     }
 
     public function buscarPorId($id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM ventas WHERE id = :id");
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $dao = new VentaDAO(conectar());
+        return $dao->buscarPorId($id);
     }
 
     public function anular($id)
     {
-        $stmt = $this->db->prepare("UPDATE ventas SET estado = 'anulada' WHERE id = :id");
-        return $stmt->execute([':id' => $id]);
+        $dao = new VentaDAO(conectar());
+        return $dao->anular($id);
     }
 }

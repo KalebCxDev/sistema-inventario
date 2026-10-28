@@ -116,6 +116,7 @@ button.azul:hover { background: #1d4ed8; }
 .btn:hover { text-decoration: none; opacity: 0.85; }
 .btn.nuevo { background: #16a34a; }
 .btn.editar { background: #3b82f6; }
+.btn.ticket { background: #3b82f6; }
 .btn.movimiento { background: #10b981; }
 .btn.eliminar { background: #ef4444; }
 

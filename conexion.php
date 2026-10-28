@@ -27,11 +27,25 @@ class Model
 }
 
 require_once __DIR__ . '/auth.php';
+
+// Carga de DAOs
+require_once __DIR__ . '/daos/CategoriaDAO.php';
+require_once __DIR__ . '/daos/ClienteDAO.php';
+require_once __DIR__ . '/daos/MovimientoDAO.php';
+require_once __DIR__ . '/daos/ProductoDAO.php';
+require_once __DIR__ . '/daos/UsuarioDAO.php';
+require_once __DIR__ . '/daos/VentaDAO.php';
+
+// Carga de Modelos
 require_once __DIR__ . '/modelos/Producto.php';
 require_once __DIR__ . '/modelos/ProductoPerecedero.php';
 require_once __DIR__ . '/modelos/Categoria.php';
 require_once __DIR__ . '/modelos/Movimiento.php';
+require_once __DIR__ . '/modelos/Venta.php';
+require_once __DIR__ . '/modelos/Usuario.php';
+require_once __DIR__ . '/modelos/Cliente.php';
 
+// Carga de Controladores
 require_once __DIR__ . '/controladores/ProductoController.php';
 require_once __DIR__ . '/controladores/CategoriaController.php';
 require_once __DIR__ . '/controladores/MovimientoController.php';
@@ -39,11 +53,7 @@ require_once __DIR__ . '/controladores/HomeController.php';
 require_once __DIR__ . '/controladores/AlertaController.php';
 require_once __DIR__ . '/controladores/ReporteController.php';
 require_once __DIR__ . '/controladores/ExcelController.php';
-require_once __DIR__ . '/modelos/Venta.php';
 require_once __DIR__ . '/controladores/VentaController.php';
-require_once __DIR__ . '/auth.php';
-require_once __DIR__ . '/modelos/Usuario.php';
 require_once __DIR__ . '/controladores/AuthController.php';
 require_once __DIR__ . '/controladores/UsuarioController.php';
-require_once __DIR__ . '/modelos/Cliente.php';
 require_once __DIR__ . '/controladores/AjaxController.php';

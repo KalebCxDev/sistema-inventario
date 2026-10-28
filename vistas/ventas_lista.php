@@ -22,7 +22,7 @@
             <td><?= number_format($v['total'], 2) ?></td>
             <td class="<?= $v['estado'] === 'anulada' ? 'salida' : 'entrada' ?>"><?= ucfirst($v['estado']) ?></td>
             <td style="white-space: nowrap;">
-                <a href="ver_ticket.php?id=<?= $v['id'] ?>" target="_blank" class="btn azul" style="padding: 3px 8px; font-size: 11px;">Ticket</a>
+                <a href="ver_ticket.php?id=<?= $v['id'] ?>" target="_blank" class="btn ticket" style="padding: 3px 8px; font-size: 11px;">Ticket</a>
                 <?php if (rolActual() === 'admin' && $v['estado'] !== 'anulada'): ?>
                     <a href="venta_anular.php?id=<?= $v['id'] ?>" class="btn eliminar" onclick="return confirm('¿Seguro que deseas anular la Venta #<?= $v['id'] ?> (S/ <?= number_format($v['total'], 2) ?>)?\nEsta acción devolverá las unidades vendidas al inventario.')">Anular</a>
                 <?php endif; ?>
