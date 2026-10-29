@@ -23,7 +23,15 @@
         <?php endif; ?>
 
         <?php if (puedeVer('alertas')): ?>
-            <a href="alertas.php">Alertas</a>
+            <a href="alertas.php">
+                Alertas
+                <?php
+                $_crit = (new Producto())->listarCriticos();
+                if (count($_crit) > 0):
+                ?>
+                <span style="background:#ef4444;color:#fff;border-radius:999px;font-size:11px;font-weight:700;padding:1px 7px;margin-left:4px;vertical-align:middle;"><?= count($_crit) ?></span>
+                <?php endif; ?>
+            </a>
         <?php endif; ?>
 
         <?php if (puedeVer('pos')): ?>

@@ -23,9 +23,25 @@ class VentaDAO
         return $id;
     }
 
-    public function listarTodas()
+    public function listarTodas($limite = 20, $offset = 0)
     {
-        return $this->db->query("SELECT * FROM ventas ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->db->prepare("SELECT * FROM ventas ORDER BY id DESC LIMIT :lim OFFSET :off");
+        $stmt->bindValue(':lim', (int)$limite, PDO::PARAM_INT);
+        $stmt->bindValue(':off', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function contarTodas()
+    {
+        return (int)$this->db->query("SELECT COUNT(*) FROM ventas")->fetchColumn();
+    }
+
+    public function buscarPorCliente($clienteId)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM ventas WHERE cliente_id = :id ORDER BY id DESC");
+        $stmt->execute([':id' => $clienteId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function buscarPorId($id)

@@ -20,7 +20,7 @@ class VentaController
             $this->db = conectar();
             $this->db->beginTransaction();
 
-            $total = 0;
+            $total  = 0;
             $partes = [];
 
             foreach ($carrito as $item) {
@@ -36,9 +36,9 @@ class VentaController
                 $movimiento->setCantidad($cantidad);
                 $movimiento->registrar();
 
-                $subtotal = $producto->getPrecioVenta() * $cantidad;
-                $total += $subtotal;
-                $partes[] = $producto->getNombre() . ' x' . $cantidad;
+                $subtotal  = $producto->getPrecioVenta() * $cantidad;
+                $total    += $subtotal;
+                $partes[]  = $producto->getNombre() . ' x' . $cantidad;
             }
 
             $venta = new Venta();
@@ -63,7 +63,7 @@ class VentaController
 
     public function ticket()
     {
-        $id = (int)($_GET['id'] ?? 0);
+        $id    = (int)($_GET['id'] ?? 0);
         $venta = (new Venta())->buscarPorId($id);
 
         if (!$venta) {
@@ -78,7 +78,6 @@ class VentaController
             $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
-        // Parsear detalle para ítems del ticket
         $items = [];
         if (!empty($venta['detalle'])) {
             $partes = explode(', ', $venta['detalle']);
@@ -86,18 +85,17 @@ class VentaController
                 $pos = strrpos($parte, ' x');
                 if ($pos !== false) {
                     $nombre = trim(substr($parte, 0, $pos));
-                    $cant = (int)trim(substr($parte, $pos + 2));
-                    
-                    // Buscar precio de venta del producto si existe
+                    $cant   = (int)trim(substr($parte, $pos + 2));
+
                     $stmtProd = conectar()->prepare("SELECT precio_venta FROM productos WHERE nombre = :n LIMIT 1");
                     $stmtProd->execute([':n' => $nombre]);
-                    $prod = $stmtProd->fetch(PDO::FETCH_ASSOC);
+                    $prod   = $stmtProd->fetch(PDO::FETCH_ASSOC);
                     $precio = $prod ? (float)$prod['precio_venta'] : 0;
 
                     $items[] = [
-                        'nombre' => $nombre,
+                        'nombre'   => $nombre,
                         'cantidad' => $cant,
-                        'precio' => $precio,
+                        'precio'   => $precio,
                         'subtotal' => $precio * $cant
                     ];
                 }
@@ -109,17 +107,48 @@ class VentaController
 
     public function historial()
     {
-        $ventas = (new Venta())->listarTodas();
-        $error = null;
+        $limite  = 20;
+        $pagina  = max(1, (int)($_GET['pagina'] ?? 1));
+        $offset  = ($pagina - 1) * $limite;
+        $total   = (new Venta())->contarTodas();
+        $paginas = (int)ceil($total / $limite);
+        $ventas  = (new Venta())->listarTodas($limite, $offset);
+        $error   = null;
+        require __DIR__ . '/../vistas/ventas_lista.php';
+    }
+
+    public function historialCliente()
+    {
+        $clienteId = (int)($_GET['cliente_id'] ?? 0);
+        $ventas    = (new Venta())->buscarPorCliente($clienteId);
+        
+        // Buscamos el nombre del cliente para mostrarlo en el titulo
+        $clienteNombre = 'Desconocido';
+        if ($clienteId > 0) {
+            $stmt = conectar()->prepare("SELECT nombres, apellidos FROM clientes WHERE id = :id");
+            $stmt->execute([':id' => $clienteId]);
+            $c = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($c) {
+                $clienteNombre = $c['nombres'] . ' ' . $c['apellidos'];
+            }
+        }
+
+        $pagina      = 1;
+        $paginas     = 1;
+        $error       = null;
+        
+        // Asignamos el nombre al titulo extra
+        $tituloExtra = 'de ' . htmlspecialchars($clienteNombre);
+        
         require __DIR__ . '/../vistas/ventas_lista.php';
     }
 
     public function anular()
     {
         try {
-            $id = (int)($_GET['id'] ?? 0);
+            $id       = (int)($_GET['id'] ?? 0);
             $ventaData = (new Venta())->buscarPorId($id);
-            
+
             if (!$ventaData) throw new Exception('Venta no encontrada');
             if ($ventaData['estado'] === 'anulada') throw new Exception('Esta venta ya fue anulada');
 
@@ -127,14 +156,14 @@ class VentaController
             $this->db->beginTransaction();
 
             $partes = explode(', ', $ventaData['detalle']);
-            
+
             foreach ($partes as $parte) {
-                $pedazos = explode(' x', $parte);
+                $pedazos        = explode(' x', $parte);
                 $nombreProducto = trim($pedazos[0]);
-                $cantidad = (int)$pedazos[1];
+                $cantidad       = (int)$pedazos[1];
 
                 $todosProductos = (new Producto())->listarTodos();
-                $productoId = 0;
+                $productoId     = 0;
                 foreach ($todosProductos as $p) {
                     if ($p->getNombre() === $nombreProducto) {
                         $productoId = $p->getId();
@@ -160,8 +189,11 @@ class VentaController
             if (isset($this->db) && $this->db->inTransaction()) {
                 $this->db->rollBack();
             }
-            $ventas = (new Venta())->listarTodas();
-            $error = $e->getMessage();
+            $limite  = 20;
+            $pagina  = 1;
+            $paginas = 1;
+            $ventas  = (new Venta())->listarTodas($limite, 0);
+            $error   = $e->getMessage();
             require __DIR__ . '/../vistas/ventas_lista.php';
         }
     }

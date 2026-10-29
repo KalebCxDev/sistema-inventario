@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (data.existe) {
                         clienteIdInput.value = data.id;
                         clienteNombreInput.value = data.nombre;
-                        dniMensaje.textContent = 'Cliente: ' + data.nombre + (data.edad ? ' (' + data.edad + ' aÃ±os)' : '');
+                        dniMensaje.textContent = 'Cliente: ' + data.nombre + (data.edad ? ' (' + data.edad + ' Años)' : '');
                         dniMensaje.style.display = 'block';
                         if (btnQuitarCliente) btnQuitarCliente.style.display = 'inline-block';
                         buscadorDni.value = '';

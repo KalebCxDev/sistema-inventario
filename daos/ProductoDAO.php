@@ -47,12 +47,14 @@ class ProductoDAO
 
     public function eliminar($id)
     {
-        $stmt = $this->db->prepare("DELETE FROM productos WHERE id = :id");
+        // Soft delete: marca como inactivo en lugar de borrar
+        $stmt = $this->db->prepare("UPDATE productos SET estado = 'inactivo' WHERE id = :id");
         return $stmt->execute([':id' => $id]);
     }
 
     public function buscarPorId($id)
     {
+        // Sin filtro de estado: funciona para historial de ventas aunque esté inactivo
         $stmt = $this->db->prepare("SELECT * FROM productos WHERE id = :id");
         $stmt->execute([':id' => $id]);
         $fila = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -62,7 +64,7 @@ class ProductoDAO
 
     public function listarTodos()
     {
-        $stmt = $this->db->query("SELECT * FROM productos ORDER BY id DESC");
+        $stmt = $this->db->query("SELECT * FROM productos WHERE estado = 'activo' OR estado IS NULL ORDER BY id DESC");
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $lista = [];
         foreach ($filas as $fila) {

@@ -26,7 +26,7 @@
                     <tr><th>Nombre</th><th>SKU</th><th>Precio</th><th>Stock</th><th></th></tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($productos as $p): ?>
+                    <?php foreach ($productos as $p): if ($p->getStockActual() <= 0) continue; ?>
                         <tr data-id="<?= $p->getId() ?>" data-nombre="<?= htmlspecialchars($p->getNombre()) ?>" data-sku="<?= htmlspecialchars($p->getSku()) ?>" data-precio="<?= $p->getPrecioVenta() ?>" data-stock="<?= $p->getStockActual() ?>">
                             <td style="font-weight: 500;"><?= htmlspecialchars($p->getNombre()) ?></td>
                             <td><code><?= htmlspecialchars($p->getSku()) ?></code></td>

@@ -18,6 +18,10 @@ switch ($accion) {
         requiereRol(['admin', 'vendedor']);
         $controller->ticket();
         break;
+    case 'cliente':
+        requiereRol(['admin', 'vendedor']);
+        $controller->historialCliente();
+        break;
     default:
         requiereRol(['admin', 'vendedor']);
         $controller->historial();

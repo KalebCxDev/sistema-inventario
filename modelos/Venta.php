@@ -44,10 +44,22 @@ class Venta
         return $dao->guardar($this);
     }
 
-    public function listarTodas()
+    public function listarTodas($limite = 20, $offset = 0)
     {
         $dao = new VentaDAO(conectar());
-        return $dao->listarTodas();
+        return $dao->listarTodas($limite, $offset);
+    }
+
+    public function contarTodas()
+    {
+        $dao = new VentaDAO(conectar());
+        return $dao->contarTodas();
+    }
+
+    public function buscarPorCliente($clienteId)
+    {
+        $dao = new VentaDAO(conectar());
+        return $dao->buscarPorCliente($clienteId);
     }
 
     public function buscarPorId($id)
