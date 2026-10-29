@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            fetch('ajax_buscar_cliente.php?dni=' + encodeURIComponent(dni))
+            fetch('clientes.php?accion=buscar&dni=' + encodeURIComponent(dni))
                 .then(function (response) { return response.json(); })
                 .then(function (data) {
                     if (data.existe) {
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.append('apellidos', apellidos);
         formData.append('fecha_nacimiento', fechaNac);
 
-        fetch('ajax_guardar_cliente.php', { method: 'POST', body: formData })
+        fetch('clientes.php?accion=guardar', { method: 'POST', body: formData })
             .then(function (response) { return response.json(); })
             .then(function (data) {
                 btnGuardarCliente.disabled = false;

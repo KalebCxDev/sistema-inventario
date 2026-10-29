@@ -7,7 +7,7 @@
 <?php endif; ?>
 
 <?php if (in_array(rolActual(), ['admin', 'recepcionista'])): ?>
-    <a href="producto_crear.php" class="btn nuevo">+ Nuevo Producto</a>
+    <a href="productos.php?accion=crear" class="btn nuevo">+ Nuevo Producto</a>
 <?php endif; ?>
 
 <div class="buscador">
@@ -42,13 +42,13 @@
                     <td><?= htmlspecialchars($p->detallesExtra()) ?></td>
                     <td style="white-space: nowrap;">
                         <?php if (in_array(rolActual(), ['admin', 'recepcionista'])): ?>
-                            <a href="producto_editar.php?id=<?= $p->getId() ?>" class="btn editar">Editar</a>
+                            <a href="productos.php?accion=editar&id=<?= $p->getId() ?>" class="btn editar">Editar</a>
                         <?php endif; ?>
                         
                         <a href="movimientos.php?producto_id=<?= $p->getId() ?>" class="btn movimiento">Movimiento</a>
                         
                         <?php if (rolActual() === 'admin'): ?>
-                            <a href="producto_eliminar.php?id=<?= $p->getId() ?>" class="btn eliminar"
+                            <a href="productos.php?accion=eliminar&id=<?= $p->getId() ?>" class="btn eliminar"
                                onclick="return confirm('¿Seguro que deseas eliminar el producto &quot;<?= htmlspecialchars($p->getNombre(), ENT_QUOTES) ?>&quot;?')">Eliminar</a>
                         <?php endif; ?>
                     </td>

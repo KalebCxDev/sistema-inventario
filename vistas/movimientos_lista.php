@@ -7,7 +7,7 @@
 <?php endif; ?>
 
 <h2>Registrar movimiento</h2>
-<form method="POST" action="movimiento_guardar.php">
+<form method="POST" action="movimientos.php?accion=guardar">
     <label>Producto:</label>
     <select name="producto_id" required>
         <option value="">-- Seleccionar producto --</option>

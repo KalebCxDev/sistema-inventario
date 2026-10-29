@@ -31,7 +31,7 @@
                     <td style="white-space: nowrap;">
                         <a href="ver_ticket.php?id=<?= $v['id'] ?>" target="_blank" class="btn ticket">🖨 Ticket</a>
                         <?php if (rolActual() === 'admin' && $v['estado'] !== 'anulada'): ?>
-                            <a href="venta_anular.php?id=<?= $v['id'] ?>" class="btn eliminar" onclick="return confirm('¿Seguro que deseas anular la Venta #<?= $v['id'] ?> (S/ <?= number_format($v['total'], 2) ?>)?\nEsta acción devolverá las unidades vendidas al inventario.')">Anular</a>
+                            <a href="ventas.php?accion=anular&id=<?= $v['id'] ?>" class="btn eliminar" onclick="return confirm('¿Seguro que deseas anular la Venta #<?= $v['id'] ?> (S/ <?= number_format($v['total'], 2) ?>)?\nEsta acción devolverá las unidades vendidas al inventario.')">Anular</a>
                         <?php endif; ?>
                     </td>
                 </tr>

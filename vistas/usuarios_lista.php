@@ -6,7 +6,7 @@
     <p class="error">No puedes eliminar tu propia cuenta mientras estás logueado.</p>
 <?php endif; ?>
 
-<a href="usuario_crear.php" class="btn nuevo">+ Nuevo Usuario</a>
+<a href="usuarios.php?accion=crear" class="btn nuevo">+ Nuevo Usuario</a>
 
 <div class="table-responsive" style="max-width: 800px; margin-top: 18px;">
     <table>
@@ -25,9 +25,9 @@
                         </span>
                     </td>
                     <td style="white-space: nowrap;">
-                        <a href="usuario_editar.php?id=<?= $u['id'] ?>" class="btn editar">Editar</a>
+                        <a href="usuarios.php?accion=editar&id=<?= $u['id'] ?>" class="btn editar">Editar</a>
                         <?php if ($u['id'] != $_SESSION['usuario_id']): ?>
-                            <a href="usuario_eliminar.php?id=<?= $u['id'] ?>" class="btn eliminar"
+                            <a href="usuarios.php?accion=eliminar&id=<?= $u['id'] ?>" class="btn eliminar"
                                onclick="return confirm('¿Seguro que deseas eliminar al usuario &quot;<?= htmlspecialchars($u['usuario'], ENT_QUOTES) ?>&quot;?')">Eliminar</a>
                         <?php endif; ?>
                     </td>

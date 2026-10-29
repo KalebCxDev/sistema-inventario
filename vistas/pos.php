@@ -58,7 +58,7 @@
         </div>
         <p class="pos-total">Total: S/ <span id="total">0.00</span></p>
 
-        <form method="POST" action="venta_cobrar.php" id="form-cobrar" onsubmit="document.getElementById('btn-cobrar').disabled = true; document.getElementById('btn-cobrar').textContent = 'Procesando...';">
+        <form method="POST" action="ventas.php?accion=cobrar" id="form-cobrar" onsubmit="document.getElementById('btn-cobrar').disabled = true; document.getElementById('btn-cobrar').textContent = 'Procesando...';">
             <label for="buscador-dni">DNI del Cliente (Opcional):</label>
             <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
                 <input type="text" id="buscador-dni" maxlength="8" placeholder="Escribir o escanear DNI..." autocomplete="off" style="flex: 1;">

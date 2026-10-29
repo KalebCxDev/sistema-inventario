@@ -1,7 +1,7 @@
 <?php 
 require __DIR__ . '/header.php'; 
 $esNuevo = $usuario === null;
-$accionForm = $esNuevo ? 'usuario_guardar.php' : 'usuario_actualizar.php';
+$accionForm = $esNuevo ? 'usuarios.php?accion=guardar' : 'usuarios.php?accion=actualizar';
 ?>
 
 <h1><?= $esNuevo ? 'Nuevo Usuario' : 'Editar Usuario' ?></h1>

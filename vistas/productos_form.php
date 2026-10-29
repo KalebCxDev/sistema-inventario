@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/header.php';
 $esNuevo = $producto === null;
-$accionForm = $esNuevo ? 'producto_guardar.php' : 'producto_actualizar.php';
+$accionForm = $esNuevo ? 'productos.php?accion=guardar' : 'productos.php?accion=actualizar';
 
 function valorCampo($producto, $getter, $default = '')
 {
